@@ -37,7 +37,7 @@ class Game:
                         Img_minion_mid_1(), Img_minion_mid_2(), Img_minion_mid_3(), Img_malo_mid_2(), Img_malo_mid_1()]
         self.dinero = 100
         self.dibT = None
-        self.background = pygame.image.load(os.path.join("..", "imagenes", "Guia3.png"))  # INDICA LA RUTA DE LA IMAGEN, PRIMERAS COMILLAS LA CARPETA Y LAS SEGUNDAS EL ARCHIVO
+        self.background = pygame.image.load(os.path.join("..", "imagenes", "Guia.png"))  # INDICA LA RUTA DE LA IMAGEN, PRIMERAS COMILLAS LA CARPETA Y LAS SEGUNDAS EL ARCHIVO
         # self.background = pygame.transform.scale(self.background,(self.width,self.height)) #ESTA SENTENCIA HARA QUE LA IMAGEN DE FONDO SE ESCALE AL TAMAÑO DE LA VENTANA, DE MOMENTO NO ES NECESARIO LO DEJAMOS COMO ANOTACION POR SI ACASO
         self.clicks = []
 
