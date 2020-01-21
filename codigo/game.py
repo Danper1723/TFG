@@ -12,22 +12,13 @@ from personajes.img_minion_mid_3 import Img_minion_mid_3
 from personajes.img_minion_top_1 import Img_minion_top_1
 from personajes.img_minion_top_2 import Img_minion_top_2
 from personajes.img_minion_top_3 import Img_minion_top_3
+from sonidos.sonidos import Sonidos
 
 from torres.img_torre_top_1 import Img_torre_top_1
 
 
 class Game:
     def __init__(self):
-
-        # ---------------------MUSICA----------------------------
-        pygame.mixer.init()
-        pygame.mixer.pre_init(44100, -16, 2, 2048)
-        pygame.init()
-        print("Musica ON!")
-        pygame.mixer.music.load('../sonidos/-backgroundSound.mp3')
-        pygame.mixer.music.set_volume(0.09)
-        pygame.mixer.music.play(-1)
-        # --------------------------------------------------------
 
         self.width = 1920  # TAMAÑO DE LA VENTANA
         self.height = 1080  # TAMAÑO DE LA VENTANA
@@ -41,9 +32,18 @@ class Game:
         # self.background = pygame.transform.scale(self.background,(self.width,self.height)) #ESTA SENTENCIA HARA QUE LA IMAGEN DE FONDO SE ESCALE AL TAMAÑO DE LA VENTANA, DE MOMENTO NO ES NECESARIO LO DEJAMOS COMO ANOTACION POR SI ACASO
         self.clicks = []
 
+        self.cont = 0
+        self.torreta = None
+
     def run(self):
         run = True
         clock = pygame.time.Clock()
+
+        # -----------------------------
+        self.b = Sonidos()
+        self.b.backgroundPlay()
+        # -----------------------------
+
         while run:
             #self.torres()
 
@@ -79,27 +79,27 @@ class Game:
 
         self.win.blit(self.background, (0, 0))
 #Torres TOP-------------------------------------------------------------------------------------------------------------
-        prueba = True  # tiene que ser el estado actuial de CADA torre
+        self.torreta = self.torres[0].viva # tiene que ser el estado actuial de CADA torre
 
-        if prueba:
+        if self.torreta:
             self.dibT = pygame.image.load("../torres/torres/torre_viva.png")
         else:
             self.dibT = pygame.image.load("../torres/torres/torre_muerta.png")
         self.dibT = self.background.blit(self.dibT, (770, 5))
 
-        if prueba:
+        if self.torreta:
             self.dibT = pygame.image.load("../torres/torres/torre_viva.png")
         else:
             self.dibT = pygame.image.load("../torres/torres/torre_muerta.png")
         self.dibT = self.background.blit(self.dibT, (1120, 5))
 
-        if prueba:
+        if self.torreta:
             self.dibT = pygame.image.load("../torres/torres/torre_viva.png")
         else:
             self.dibT = pygame.image.load("../torres/torres/torre_muerta.png")
         self.dibT = self.background.blit(self.dibT, (450, 350))
 
-        if prueba:
+        if self.torreta:
             self.dibT = pygame.image.load("../torres/torres/torre_viva.png")
         else:
             self.dibT = pygame.image.load("../torres/torres/torre_muerta.png")
