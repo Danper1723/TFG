@@ -1,5 +1,6 @@
 import pygame
 import os
+import sqlite3
 
 from personajes.img_malo_mid_1 import Img_malo_mid_1
 from personajes.img_malo_mid_2 import Img_malo_mid_2
@@ -24,8 +25,9 @@ class Game:
         self.height = 1080  # TAMAÑO DE LA VENTANA
         self.win = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)  # ESTA LINEA HACE QUE SE VEA EN PANTALLA COMPLETA
         self.torres = [Img_torre_top_1()]
-        self.subdito = [Img_minion_top_1(), Img_minion_top_2(), Img_minion_top_3(), Img_malo_top_1(), Img_malo_top_2(), Img_malo_top_3(),
-                        Img_minion_mid_1(), Img_minion_mid_2(), Img_minion_mid_3(), Img_malo_mid_2(), Img_malo_mid_1()]
+        self.subdito = [Img_minion_top_1(), Img_minion_top_2(), Img_minion_top_3(), Img_malo_top_1(), Img_malo_top_2(),
+                        Img_malo_top_3(), Img_minion_mid_1(), Img_minion_mid_2(), Img_minion_mid_3(), Img_malo_mid_2(),
+                        Img_malo_mid_1()]
         self.dinero = 100
         self.dibT = None
         self.background = pygame.image.load(os.path.join("..", "imagenes", "Guia.png"))  # INDICA LA RUTA DE LA IMAGEN, PRIMERAS COMILLAS LA CARPETA Y LAS SEGUNDAS EL ARCHIVO
@@ -43,6 +45,21 @@ class Game:
         self.b = Sonidos()
         self.b.backgroundPlay()
         # -----------------------------
+        conexion = sqlite3.connect('../prueba.db')
+        cursor = conexion.cursor()
+        cursor.execute('drop table torres')
+        conexion.commit()
+        cursor.execute('create table if not exists torres(nombre varchar(30), estado int)')
+        conexion.commit()
+        cursor.execute('insert into torres values("torre_top_1", 1)')
+        conexion.commit()
+        cursor.execute('insert into torres values("torre_top_2", 1)')
+        conexion.commit()
+        cursor.execute('insert into torres values("torre_top_3", 1)')
+        conexion.commit()
+        cursor.execute('insert into torres values("torre_top_4", 1)')
+        conexion.commit()
+        conexion.close()
 
         while run:
             #self.torres()
