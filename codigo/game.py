@@ -60,16 +60,41 @@ class Game:
                         Img_minion_malo_bot_1(), Img_minion_malo_bot_2(), Img_minion_malo_bot_3()
                         ]
         self.dinero = 100
-        self.dibT = None
+
         self.background = pygame.image.load(os.path.join("..", "imagenes", "Guia.png"))  # INDICA LA RUTA DE LA IMAGEN, PRIMERAS COMILLAS LA CARPETA Y LAS SEGUNDAS EL ARCHIVO
         # self.background = pygame.transform.scale(self.background,(self.width,self.height)) #ESTA SENTENCIA HARA QUE LA IMAGEN DE FONDO SE ESCALE AL TAMAÑO DE LA VENTANA, DE MOMENTO NO ES NECESARIO LO DEJAMOS COMO ANOTACION POR SI ACASO
         self.clicks = []
 
+        # TOP
+        self.torre_top_1_derecha = None
+        self.dib_torre_top_1_derecha_viva = None
+        self.dib_torre_top_1_derecha_nada = None
+        self.dib_torre_top_1_derecha_rota = None
+        self.cont_torre_top_1_derecha = 0
+        # -----
+        self.torre_top_2_derecha = None
+        self.dib_torre_top_2_derecha_viva = None
+        self.dib_torre_top_2_derecha_nada = None
+        self.dib_torre_top_2_derecha_rota = None
+        self.cont_torre_top_2_derecha = 0
+        # -----
+        self.torre_top_1_izquierda = None
+        self.dib_torre_top_1_izquierda_viva = None
+        self.dib_torre_top_1_izquierda_nada = None
+        self.dib_torre_top_1_izquierda_rota = None
+        self.cont_torre_top_1_izquierda = 0
         self.cont = 0
-        self.torreta = None
-        self.dib_torre_top_1_viva = None
-        self.dib_torre_top_1_nada = None
-        self.dib_torre_top_1_rota = None
+        self.dibT = None
+        # -----
+        self.torre_top_2_izquierda = None
+        self.dib_torre_top_2_izquierda_viva = None
+        self.dib_torre_top_2_izquierda_nada = None
+        self.dib_torre_top_2_izquierda_rota = None
+        self.cont_torre_top_2_izquierda = 0
+        # MID
+        # BOT
+
+        self.cont = 0
         self.dibT = None
 
     def run(self):
@@ -80,35 +105,36 @@ class Game:
         self.b = Sonidos()
         self.b.backgroundPlay()
         # -----------------------------
+
         conexion = sqlite3.connect('../prueba.db')
         cursor = conexion.cursor()
         cursor.execute('DELETE FROM torres')
         conexion.commit()
-        cursor.execute('INSERT INTO torres VALUES("torre_top_1", 1)')
+        cursor.execute('INSERT INTO torres VALUES("torre_top_1_derecha", 1)')
         conexion.commit()
-        cursor.execute('INSERT INTO torres VALUES("torre_top_2", 1)')
+        cursor.execute('INSERT INTO torres VALUES("torre_top_2_derecha", 1)')
         conexion.commit()
-        cursor.execute('INSERT INTO torres VALUES("torre_top_3", 1)')
+        cursor.execute('INSERT INTO torres VALUES("torre_top_1_izquierda", 1)')
         conexion.commit()
-        cursor.execute('INSERT INTO torres VALUES("torre_top_4", 1)')
-        conexion.commit()
-
-        cursor.execute('INSERT INTO torres VALUES("torre_mid_1", 1)')
-        conexion.commit()
-        cursor.execute('INSERT INTO torres VALUES("torre_mid_2", 1)')
-        conexion.commit()
-        cursor.execute('INSERT INTO torres VALUES("torre_mid_3", 1)')
-        conexion.commit()
-        cursor.execute('INSERT INTO torres VALUES("torre_mid_4", 1)')
+        cursor.execute('INSERT INTO torres VALUES("torre_top_2_izquierda", 1)')
         conexion.commit()
 
-        cursor.execute('INSERT INTO torres VALUES("torre_bot_1", 1)')
+        cursor.execute('INSERT INTO torres VALUES("torre_mid_1_derecha", 1)')
         conexion.commit()
-        cursor.execute('INSERT INTO torres VALUES("torre_bot_2", 1)')
+        cursor.execute('INSERT INTO torres VALUES("torre_mid_2_derecha", 1)')
         conexion.commit()
-        cursor.execute('INSERT INTO torres VALUES("torre_bot_3", 1)')
+        cursor.execute('INSERT INTO torres VALUES("torre_mid_1_izquierda", 1)')
         conexion.commit()
-        cursor.execute('INSERT INTO torres VALUES("torre_bot_4", 1)')
+        cursor.execute('INSERT INTO torres VALUES("torre_mid_2_izquierda", 1)')
+        conexion.commit()
+
+        cursor.execute('INSERT INTO torres VALUES("torre_bot_1_derecha", 1)')
+        conexion.commit()
+        cursor.execute('INSERT INTO torres VALUES("torre_bot_2_derecha", 1)')
+        conexion.commit()
+        cursor.execute('INSERT INTO torres VALUES("torre_bot_1_izquierda", 1)')
+        conexion.commit()
+        cursor.execute('INSERT INTO torres VALUES("torre_bot_2_izquierda", 1)')
         conexion.commit()
         conexion.close()
 
@@ -153,45 +179,96 @@ class Game:
 
         self.cont = self.cont + 1
 
-        cursor.execute('SELECT estado FROM torres WHERE nombre = "torre_top_1"')
+        # SELECT A LA BASE DE DATOS PARA VER ESTADO DE torre_top_1_derecha
+        cursor.execute('SELECT estado FROM torres WHERE nombre = "torre_top_1_derecha"')
         resul = cursor.fetchall()
-
-        if self.cont == 50:
-            cursor.execute('UPDATE torres SET estado = 0 WHERE nombre = "torre_top_1"')
-            conexion.commit()
         for r in resul:
-            self.torreta = r[0]
-        print(self.torreta)
+            self.torre_top_1_derecha = r[0]
+        print(self.torre_top_1_derecha)
+        # SELECT A LA BASE DE DATOS PARA VER ESTADO DE torre_top_2_derecha
+        cursor.execute('SELECT estado FROM torres WHERE nombre = "torre_top_2_derecha"')
+        resul = cursor.fetchall()
+        for r in resul:
+            self.torre_top_2_derecha = r[0]
+        print(self.torre_top_2_derecha)
+        # SELECT A LA BASE DE DATOS PARA VER ESTADO DE torre_top_1_izquierda
+        cursor.execute('SELECT estado FROM torres WHERE nombre = "torre_top_1_izquierda"')
+        resul = cursor.fetchall()
+        for r in resul:
+            self.torre_top_1_izquierda = r[0]
+        print(self.torre_top_1_izquierda)
+        # SELECT A LA BASE DE DATOS PARA VER ESTADO DE torre_top_2_izquierda
+        cursor.execute('SELECT estado FROM torres WHERE nombre = "torre_top_2_izquierda"')
+        resul = cursor.fetchall()
+        for r in resul:
+            self.torre_top_2_izquierda = r[0]
+        print(self.torre_top_2_izquierda)
+        # conexion.close()#ESTO HAY QUE DES-COMENTARLO
+
+        # --------ESTO TIENE QUE IR FUERA
+        if self.cont == 50:
+            cursor.execute('UPDATE torres SET estado = 0 WHERE nombre = "torre_top_1_derecha"')
+            conexion.commit()
+            cursor.execute('UPDATE torres SET estado = 0 WHERE nombre = "torre_top_2_derecha"')
+            conexion.commit()
+            cursor.execute('UPDATE torres SET estado = 0 WHERE nombre = "torre_top_1_izquierda"')
+            conexion.commit()
+            cursor.execute('UPDATE torres SET estado = 0 WHERE nombre = "torre_top_2_izquierda"')
+            conexion.commit()
         conexion.close()
+        # -----------
         # self.torreta = self.torres[0].viva # tiene que ser el estado actuial de CADA torre
-
-        if self.torreta:
-            self.dib_torre_top_1_viva = pygame.image.load("../torres/torres/torre_viva.png").convert_alpha()
-            self.background.blit(self.dib_torre_top_1_viva, (770, 5))
-        else:
-            self.dib_torre_top_1_nada = pygame.image.load(
+        # TOP
+        if self.torre_top_1_derecha and not self.cont_torre_top_1_derecha:
+            self.dib_torre_top_1_derecha_viva = pygame.image.load("../torres/torres/torre_viva.png").convert_alpha()
+            self.background.blit(self.dib_torre_top_1_derecha_viva, (770, 5))
+            self.cont_torre_top_1_derecha = self.cont_torre_top_1_derecha + 1
+        elif not self.torre_top_1_derecha and self.cont_torre_top_1_derecha:
+            self.dib_torre_top_1_derecha_nada = pygame.image.load(
                 "../torres/torres/torre_top_derecha_1_vacia.png").convert_alpha()
-            self.background.blit(self.dib_torre_top_1_nada, (770, 9))
-            self.dib_torre_top_1_rota = pygame.image.load("../torres/torres/torre_rota.png").convert_alpha()
-            self.background.blit(self.dib_torre_top_1_rota, (770, 5))
+            self.background.blit(self.dib_torre_top_1_derecha_nada, (770, 9))
+            self.dib_torre_top_1_derecha_rota = pygame.image.load("../torres/torres/torre_rota.png").convert_alpha()
+            self.background.blit(self.dib_torre_top_1_derecha_rota, (770, 5))
+            self.cont_torre_top_1_derecha = self.cont_torre_top_1_derecha + 1
 
-        if self.torreta:
-            self.dibT = pygame.image.load("../torres/torres/torre_viva.png")
-        else:
-            self.dibT = pygame.image.load("../torres/torres/torre_muerta.png")
-        self.dibT = self.background.blit(self.dibT, (1120, 5))
+        if self.torre_top_2_derecha and not self.cont_torre_top_2_derecha:
+            self.dib_torre_top_2_derecha_viva = pygame.image.load("../torres/torres/torre_viva.png").convert_alpha()
+            self.background.blit(self.dib_torre_top_2_derecha_viva, (1120, 5))
+            self.cont_torre_top_2_derecha = self.cont_torre_top_2_derecha + 1
+        elif not self.torre_top_2_derecha and self.cont_torre_top_2_derecha:
+            self.dib_torre_top_2_derecha_nada = pygame.image.load(
+                "../torres/torres/torre_top_derecha_2_vacia.png").convert_alpha()
+            self.background.blit(self.dib_torre_top_2_derecha_nada, (1120, 15))
+            self.dib_torre_top_2_derecha_rota = pygame.image.load("../torres/torres/torre_rota.png").convert_alpha()
+            self.background.blit(self.dib_torre_top_2_derecha_rota, (1120, 5))
+            self.cont_torre_top_2_derecha = self.cont_torre_top_2_derecha + 1
 
-        if self.torreta:
-            self.dibT = pygame.image.load("../torres/torres/torre_viva.png")
-        else:
-            self.dibT = pygame.image.load("../torres/torres/torre_muerta.png")
-        self.dibT = self.background.blit(self.dibT, (450, 350))
+        if self.torre_top_1_izquierda and not self.cont_torre_top_1_izquierda:
+            self.dib_torre_top_1_izquierda_viva = pygame.image.load("../torres/torres/torre_viva.png").convert_alpha()
+            self.background.blit(self.dib_torre_top_1_izquierda_viva, (450, 350))
+            self.cont_torre_top_1_izquierda = self.cont_torre_top_1_izquierda + 1
+        elif not self.torre_top_1_izquierda and self.cont_torre_top_1_izquierda:
+            self.dib_torre_top_1_izquierda_nada = pygame.image.load(
+                "../torres/torres/torre_top_izquierda_1_vacia.png").convert_alpha()
+            self.background.blit(self.dib_torre_top_1_izquierda_nada, (450, 350))
+            self.dib_torre_top_1_izquierda_rota = pygame.image.load("../torres/torres/torre_rota.png").convert_alpha()
+            self.background.blit(self.dib_torre_top_1_izquierda_rota, (450, 350))
+            self.cont_torre_top_1_izquierda = self.cont_torre_top_1_izquierda + 1
 
-        if self.torreta:
-            self.dibT = pygame.image.load("../torres/torres/torre_viva.png")
-        else:
-            self.dibT = pygame.image.load("../torres/torres/torre_muerta.png")
-        self.dibT = self.background.blit(self.dibT, (450, 610))
+        if self.torre_top_2_izquierda and not self.cont_torre_top_2_izquierda:
+            self.dib_torre_top_2_izquierda_viva = pygame.image.load("../torres/torres/torre_viva.png").convert_alpha()
+            self.background.blit(self.dib_torre_top_1_izquierda_viva, (450, 610))
+            self.cont_torre_top_2_izquierda = self.cont_torre_top_2_izquierda + 1
+        elif not self.torre_top_2_izquierda and self.cont_torre_top_2_izquierda:
+            self.dib_torre_top_2_izquierda_nada = pygame.image.load(
+                "../torres/torres/torre_top_izquierda_2_vacia.png").convert_alpha()
+            self.background.blit(self.dib_torre_top_2_izquierda_nada, (450, 611))
+            self.dib_torre_top_2_izquierda_rota = pygame.image.load("../torres/torres/torre_rota.png").convert_alpha()
+            self.background.blit(self.dib_torre_top_2_izquierda_rota, (450, 610))
+            self.cont_torre_top_2_izquierda = self.cont_torre_top_2_izquierda + 1
+
+        # MID
+        # BOT
 #-----------------------------------------------------------------------------------------------------------------------
         """
         #FUNCION PARA ESCRIBIR POR CONSOLA COORDENADAS
