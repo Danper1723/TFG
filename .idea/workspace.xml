@@ -4,30 +4,6 @@
     <list default="true" id="a8158525-63cb-49b9-bcc3-2dbd75664211" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/codigo/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/codigo/game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_malo_mid_1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_malo_mid_2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_malo_mid_3.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_malo_top_1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_malo_top_2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_malo_top_3.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_minion_mid_1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_minion_mid_2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_minion_mid_3.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_minion_top_1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_minion_top_2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/accion_minion_top_3.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_malo_mid_1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_malo_mid_2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_malo_mid_3.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_malo_top_1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_malo_top_2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_malo_top_3.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_minion_mid_1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_minion_mid_2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_minion_mid_3.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_minion_top_1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_minion_top_2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/personajes/img_minion_top_3.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/prueba.db" beforeDir="false" afterPath="$PROJECT_DIR$/prueba.db" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -54,7 +30,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="C:/TFG" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
