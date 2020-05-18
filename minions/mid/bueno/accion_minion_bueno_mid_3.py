@@ -154,7 +154,7 @@ class Accion_minion_bueno_mid_3:
                 win.blit(self.img, (self.x, self.y))
             else:
                 win.blit(self.img, (10000, 10000))
-
+                self.health = 0
                 # if
 
             self.mover()
