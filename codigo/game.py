@@ -62,6 +62,10 @@ from torres.bot.accion_torre_bot_2_izquierda import Accion_torre_bot_2_izquierda
 
 #IMPORTAR LOS HEROES
 from heroes.Mrcalabaza.img_calabaza import Img_calabaza
+from heroes.Asesina.img_asesina import Img_asesina
+from heroes.Cicatrices.img_cicatrices import Img_cicatrices
+from heroes.Robot.img_robot import Img_robot
+from heroes.Elfa.img_elfa import Img_elfa
 
 from sonidos.sonidos import Sonidos
 
@@ -213,7 +217,7 @@ def main():
 def game():
     global segundosRonda  # Tiempo
     segundosRonda = 20
-    segundosRonda = 5
+    #segundosRonda = 5
     global segundosPartida  # Tiempo
     segundosPartida = 0
     global minutosPartida  # Tiempo
@@ -252,15 +256,14 @@ def game():
                 Img_minion_malo_bot_1(), Img_minion_malo_bot_2(), Img_minion_malo_bot_3()
             ]
             self.heroe = [
-                Img_calabaza()
+                Img_calabaza(), Img_asesina(), Img_cicatrices(), Img_robot(), Img_elfa()
             ]
             self.villano = [
 
             ]
             self.dinero = 100
 
-            self.background = pygame.image.load(os.path.join("..", "imagenes",
-                                                             "Guia.png"))  # INDICA LA RUTA DE LA IMAGEN, PRIMERAS COMILLAS LA CARPETA Y LAS SEGUNDAS EL ARCHIVO
+            self.background = pygame.image.load(os.path.join("..", "imagenes", "Guia.png"))  # INDICA LA RUTA DE LA IMAGEN, PRIMERAS COMILLAS LA CARPETA Y LAS SEGUNDAS EL ARCHIVO
             # self.background = pygame.transform.scale(self.background,(self.width,self.height)) #ESTA SENTENCIA HARA QUE LA IMAGEN DE FONDO SE ESCALE AL TAMAÑO DE LA VENTANA, DE MOMENTO NO ES NECESARIO LO DEJAMOS COMO ANOTACION POR SI ACASO
             self.clicks = []
 
@@ -362,6 +365,22 @@ def game():
             self.bCalColTop = False
             self.bCalColMid = False
             self.bCalColBot = False
+                # Asesina
+            self.bAseColTop = False
+            self.bAseColMid = False
+            self.bAseColBot = False
+                # Cicatrices
+            self.bCicColTop = False
+            self.bCicColMid = False
+            self.bCicColBot = False
+                # Robot
+            self.bRobColTop = False
+            self.bRobColMid = False
+            self.bRobColBot = False
+                # Elfa
+            self.bElfColTop = False
+            self.bElfColMid = False
+            self.bElfColBot = False
 
             self.cont_top = 0
             self.cont_mid = 0
@@ -376,14 +395,33 @@ def game():
                         sub.estado_partida()
                     for her in self.heroe:
                         her.estado_partida()
+                    """for vil in self.villano:
+                        vil.estado_partida()"""
                     if self.subdito[15].estado:
                         segundosRonda = 60
                         self.reset_cont = 1
                     else:
                         if self.reset_cont:
+                            # Mr.Calabaza
                             self.bCalColTop = False
                             self.bCalColMid = False
                             self.bCalColBot = False
+                            # Asesina
+                            self.bAseColTop = False
+                            self.bAseColMid = False
+                            self.bAseColBot = False
+                            # Cicatrices
+                            self.bCicColTop = False
+                            self.bCicColMid = False
+                            self.bCicColBot = False
+                            # Robot
+                            self.bRobColTop = False
+                            self.bRobColMid = False
+                            self.bRobColBot = False
+                            # Elfa
+                            self.bElfColTop = False
+                            self.bElfColMid = False
+                            self.bElfColBot = False
 
 
                             self.cont_top = 0
@@ -391,7 +429,7 @@ def game():
                             self.cont_bot = 0
                             self.reset_cont = 0
                         segundosRonda = 20
-                        segundosRonda = 5
+                        #segundosRonda = 5
                     return cronoRonda()
                 else:
                     segundosRonda -= 1
@@ -464,8 +502,24 @@ def game():
 
             # Variables para arrastrar a Mr.Clabaza
             mCalabazaRect = pygame.rect.Rect(317, 189, 32, 32)
-            mCalabazaImg = pygame.image.load(os.path.join("..", "heroes/imagenes/Mr.calabaza/", "calabaza.png"))  # Carga imagen grande mr.Calabaza
+            mCalabazaImg = pygame.image.load(os.path.join("..", "heroes/imagenes/Mr.calabaza/", "calabaza.png"))  # Carga imagen grande Mr.Calabaza
             rectangle_draging_Mcalabaza = False
+            # Variables para arrastrar a Asesina
+            asesinaRect = pygame.rect.Rect(319, 291, 32, 32)
+            asesinaImg = pygame.image.load(os.path.join("..", "heroes/imagenes/Asesina/", "asesina.png"))  # Carga imagen grande Asesina
+            rectangle_draging_Asesina = False
+            # Variables para arrastrar a Cicatrices
+            cicatricesRect = pygame.rect.Rect(317, 393, 32, 32)
+            cicatricesImg = pygame.image.load(os.path.join("..", "heroes/imagenes/Cicatrices/", "cicatrices.png"))  # Carga imagen grande Cicatrices
+            rectangle_draging_Cicatrices = False
+            # Variables para arrastrar a Robot
+            robotRect = pygame.rect.Rect(317, 494, 32, 32)
+            robotImg = pygame.image.load(os.path.join("..", "heroes/imagenes/Robot/", "robot.png"))  # Carga imagen grande Cicatrices
+            rectangle_draging_Robot = False
+            # Variables para arrastrar a Elfa
+            elfaRect = pygame.rect.Rect(318, 598, 32, 32)
+            elfaImg = pygame.image.load(os.path.join("..", "heroes/imagenes/Elfa/", "elfa.png"))  # Carga imagen grande Elfa
+            rectangle_draging_Elfa = False
 
             # Zona de colision top
             rectColTop = pygame.rect.Rect(482, 635, 100, 100)
@@ -481,33 +535,109 @@ def game():
 
             # ---Terminan las variables de arrastrar heroes
             while run:
-                # Mover a Mr.Calabaza
                 if not self.subdito[15].estado:
                     for event in pygame.event.get():
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if event.button == 1:
+                                # Mover a Mr.Calabaza
                                 if mCalabazaRect.collidepoint(event.pos):
                                     rectangle_draging_Mcalabaza = True
                                     mouse_x, mouse_y = event.pos
                                     offset_x = mCalabazaRect.x - mouse_x
                                     offset_y = mCalabazaRect.y - mouse_y
+                                # Mover a Asesina
+                                if asesinaRect.collidepoint(event.pos):
+                                    rectangle_draging_Asesina = True
+                                    mouse_x, mouse_y = event.pos
+                                    offset_x = asesinaRect.x - mouse_x
+                                    offset_y = asesinaRect.y - mouse_y
+                                # Mover a Cicatrices
+                                if cicatricesRect.collidepoint(event.pos):
+                                    rectangle_draging_Cicatrices = True
+                                    mouse_x, mouse_y = event.pos
+                                    offset_x = cicatricesRect.x - mouse_x
+                                    offset_y = cicatricesRect.y - mouse_y
+                                # Mover a Robot
+                                if robotRect.collidepoint(event.pos):
+                                    rectangle_draging_Robot = True
+                                    mouse_x, mouse_y = event.pos
+                                    offset_x = robotRect.x - mouse_x
+                                    offset_y = robotRect.y - mouse_y
+                                # Mover a Elfa
+                                if elfaRect.collidepoint(event.pos):
+                                    rectangle_draging_Elfa = True
+                                    mouse_x, mouse_y = event.pos
+                                    offset_x = elfaRect.x - mouse_x
+                                    offset_y = elfaRect.y - mouse_y
                         elif event.type == pygame.MOUSEBUTTONUP:
                             if event.button == 1:
                                 print("aqui")
-                                rectangle_draging_Mcalabaza = False
+                                # Mover a Mr.Calabaza
+                                if rectangle_draging_Mcalabaza:
+                                    rectangle_draging_Mcalabaza = False
+                                # Mover a Asesina
+                                if rectangle_draging_Asesina:
+                                    rectangle_draging_Asesina = False
+                                # Mover a Cicatrices
+                                if rectangle_draging_Cicatrices:
+                                    rectangle_draging_Cicatrices = False
+                                # Mover a Robot
+                                if rectangle_draging_Robot:
+                                    rectangle_draging_Robot = False
+                                # Mover a Elfa
+                                if rectangle_draging_Elfa:
+                                    rectangle_draging_Elfa = False
                         elif event.type == pygame.MOUSEMOTION:
+                            # Mover a Mr.Calabaza
                             if rectangle_draging_Mcalabaza:
                                 print("esto no falla->", event.pos)
                                 mouse_x, mouse_y = event.pos
                                 mCalabazaRect.x = mouse_x + offset_x
                                 mCalabazaRect.y = mouse_y + offset_y
+                            # Mover a Asesina
+                            if rectangle_draging_Asesina:
+                                print("esto no falla->", event.pos)
+                                mouse_x, mouse_y = event.pos
+                                asesinaRect.x = mouse_x + offset_x
+                                asesinaRect.y = mouse_y + offset_y
+                            # Mover a Cicatrices
+                            if rectangle_draging_Cicatrices:
+                                print("esto no falla->", event.pos)
+                                mouse_x, mouse_y = event.pos
+                                cicatricesRect.x = mouse_x + offset_x
+                                cicatricesRect.y = mouse_y + offset_y
+                            # Mover a Robot
+                            if rectangle_draging_Robot:
+                                print("esto no falla->", event.pos)
+                                mouse_x, mouse_y = event.pos
+                                robotRect.x = mouse_x + offset_x
+                                robotRect.y = mouse_y + offset_y
+                            # Mover a Elfa
+                            if rectangle_draging_Elfa:
+                                print("esto no falla->", event.pos)
+                                mouse_x, mouse_y = event.pos
+                                elfaRect.x = mouse_x + offset_x
+                                elfaRect.y = mouse_y + offset_y
+
 
                 if self.subdito[15].estado:
                     mCalabazaRect = pygame.rect.Rect(317, 189, 32, 32)  # Crear el rect de Mr.Calabaza
                     rectCal = pygame.draw.rect(self.win, (255, 255, 255), mCalabazaRect, -1)  # Rect que envuelve a Mr.Calabaza
+                    asesinaRect = pygame.rect.Rect(319, 291, 32, 32)  # Crear el rect de Asesina
+                    rectAse = pygame.draw.rect(self.win, (255, 255, 255), asesinaRect, -1)  # Rect que envuelve a Asesina
+                    cicatricesRect = pygame.rect.Rect(317, 393, 32, 32)  # Crear el rect de Cicatrices
+                    rectCic = pygame.draw.rect(self.win, (255, 255, 255), cicatricesRect, -1)  # Rect que envuelve a Cicatrices
+                    robotRect = pygame.rect.Rect(317, 494, 32, 32)  # Crear el rect de Robot
+                    rectRob = pygame.draw.rect(self.win, (255, 255, 255), robotRect, -1)  # Rect que envuelve a Robot
+                    elfaRect = pygame.rect.Rect(317, 599, 32, 32)  # Crear el rect de Elfa
+                    rectElf = pygame.draw.rect(self.win, (255, 255, 255), elfaRect, -1)  # Rect que envuelve a Elfa
 
                 else:
                     rectCal = pygame.draw.rect(self.win, (255, 255, 255), mCalabazaRect, -1)  # Rect que envuelve a Mr.Calabaza
+                    rectAse = pygame.draw.rect(self.win, (255, 255, 255), asesinaRect, -1)  # Rect que envuelve a Asesina
+                    rectCic = pygame.draw.rect(self.win, (255, 255, 255), cicatricesRect, -1)  # Rect que envuelve a Cicatrices
+                    rectRob = pygame.draw.rect(self.win, (255, 255, 255), robotRect, -1)  # Rect que envuelve a Robot
+                    rectElf = pygame.draw.rect(self.win, (255, 255, 255), elfaRect, -1)  # Rect que envuelve a Elfa
 
                     # Zonas de colisiones
                     self.win.blit(colisionTopImg, rectColTop)  # Dibuja el sprite de colision top con su rect
@@ -516,11 +646,35 @@ def game():
 
                 # Heroes para arrastrar
                 self.win.blit(mCalabazaImg, rectCal)  # Dibujar el sprite grande de Mr.Calabaza con su rect
+                self.win.blit(asesinaImg, rectAse)  # Dibujar el sprite grande de Asesina con su rect
+                self.win.blit(cicatricesImg, rectCic)  # Dibujar el sprite grande de Cicatrices con su rect
+                self.win.blit(robotImg, rectRob)  # Dibujar el sprite grande de Robot con su rect
+                self.win.blit(elfaImg, rectElf)  # Dibujar el sprite grande de Elfa con su rect
 
                 # Colisiones de Mr.Calabaza
                 if not self.bCalColTop:
                     if rectCal.colliderect(rectColTop):  # Colision con rect en top
                         if self.cont_top <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[0].linea == "mid":
+                                if self.heroe[0].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "mid":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_mid = 1
+                            elif self.heroe[0].posicion == 2:
+                                self.cont_mid = 1
+                            if self.heroe[0].linea == "bot":
+                                if self.heroe[0].posicion == 1:
+                                    for her in self.heroe:
+                                        if her .linea == "bot":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_bot = 1
+                            elif self.heroe[0].posicion == 2:
+                                self.cont_bot = 1
+                            # ----------------
                             self.cont_top += 1
                             self.heroe[0].posicion = self.cont_top
                             #self.heroe[0].posicion = 2#
@@ -530,6 +684,26 @@ def game():
                 if not self.bCalColMid:
                     if rectCal.colliderect(rectColMid):  # Colision con rect en mid
                         if self.cont_mid <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[0].linea == "top":
+                                if self.heroe[0].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "top":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_top = 1
+                            elif self.heroe[0].posicion == 2:
+                                self.cont_top = 1
+                            if self.heroe[0].linea == "bot":
+                                if self.heroe[0].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "bot":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_bot = 1
+                            elif self.heroe[0].posicion == 2:
+                                self.cont_bot = 1
+                            # ----------------
                             self.cont_mid += 1
                             self.heroe[0].posicion = self.cont_mid
                             #self.heroe[0].posicion = 2#
@@ -539,15 +713,387 @@ def game():
                 if not self.bCalColBot:
                     if rectCal.colliderect(rectColBot):  # Colision con rect en bot
                         if self.cont_bot <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[0].linea == "top":
+                                if self.heroe[0].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "top":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_top = 1
+                            elif self.heroe[0].posicion == 2:
+                                self.cont_top = 1
+                            if self.heroe[0].linea == "mid":
+                                if self.heroe[0].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "mid":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_mid = 1
+                            elif self.heroe[0].posicion == 2:
+                                self.cont_mid = 1
+                            # ----------------
                             self.cont_bot += 1
                             self.heroe[0].posicion = self.cont_bot
                             #self.heroe[0].posicion = 2#
                             self.heroe[0].linea = "bot"
                             self.bCalColBot = True
 
+                # Colisiones de Asesina
+                if not self.bAseColTop:
+                    if rectAse.colliderect(rectColTop):  # Colision con rect en top
+                        if self.cont_top <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[1].linea == "mid":
+                                if self.heroe[1].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "mid":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_mid = 1
+                            elif self.heroe[1].posicion == 2:
+                                self.cont_mid = 1
+                            if self.heroe[1].linea == "bot":
+                                if self.heroe[1].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "bot":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_bot = 1
+                            elif self.heroe[1].posicion == 2:
+                                self.cont_bot = 1
+                            # ----------------
+                            self.cont_top += 1
+                            self.heroe[1].posicion = self.cont_top
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[1].linea = "top"
+                            self.bAseColTop = True
+
+                if not self.bAseColMid:
+                    if rectAse.colliderect(rectColMid):  # Colision con rect en mid
+                        if self.cont_mid <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[1].linea == "top":
+                                if self.heroe[1].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "top":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_top = 1
+                            elif self.heroe[1].posicion == 2:
+                                self.cont_top = 1
+                            if self.heroe[1].linea == "bot":
+                                if self.heroe[1].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "bot":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_bot = 1
+                            elif self.heroe[1].posicion == 2:
+                                self.cont_bot = 1
+                            # ----------------
+                            self.cont_mid += 1
+                            self.heroe[1].posicion = self.cont_mid
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[1].linea = "mid"
+                            self.bAseColMid = True
+
+                if not self.bAseColBot:
+                    if rectAse.colliderect(rectColBot):  # Colision con rect en bot
+                        if self.cont_bot <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[1].linea == "top":
+                                if self.heroe[1].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "top":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_top = 1
+                            elif self.heroe[1].posicion == 2:
+                                self.cont_top = 1
+                            if self.heroe[1].linea == "mid":
+                                if self.heroe[1].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "mid":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_mid = 1
+                            elif self.heroe[1].posicion == 2:
+                                self.cont_mid = 1
+                            # ----------------
+                            self.cont_bot += 1
+                            self.heroe[1].posicion = self.cont_bot
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[1].linea = "bot"
+                            self.bAseColBot = True
+
+                # Colisiones de Cicatrices
+                if not self.bCicColTop:
+                    if rectCic.colliderect(rectColTop):  # Colision con rect en top
+                        if self.cont_top <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[2].linea == "mid":
+                                if self.heroe[2].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "mid":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_mid = 1
+                            elif self.heroe[2].posicion == 2:
+                                self.cont_mid = 1
+                            if self.heroe[2].linea == "bot":
+                                if self.heroe[2].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "bot":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_bot = 1
+                            elif self.heroe[2].posicion == 2:
+                                self.cont_bot = 1
+                            # ----------------
+                            self.cont_top += 1
+                            self.heroe[2].posicion = self.cont_top
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[2].linea = "top"
+                            self.bCicColTop = True
+
+                if not self.bCicColMid:
+                    if rectCic.colliderect(rectColMid):  # Colision con rect en mid
+                        if self.cont_mid <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[2].linea == "top":
+                                if self.heroe[2].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "top":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_top = 1
+                            elif self.heroe[2].posicion == 2:
+                                self.cont_top = 1
+                            if self.heroe[2].linea == "bot":
+                                if self.heroe[2].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "bot":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_bot = 1
+                            elif self.heroe[2].posicion == 2:
+                                self.cont_bot = 1
+                            # ----------------
+                            self.cont_mid += 1
+                            self.heroe[2].posicion = self.cont_mid
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[2].linea = "mid"
+                            self.bCicColMid = True
+
+                if not self.bCicColBot:
+                    if rectCic.colliderect(rectColBot):  # Colision con rect en bot
+                        if self.cont_bot <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[2].linea == "top":
+                                if self.heroe[2].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "top":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_top = 1
+                            elif self.heroe[2].posicion == 2:
+                                self.cont_top = 1
+                            if self.heroe[2].linea == "mid":
+                                if self.heroe[1].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "mid":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_mid = 1
+                            elif self.heroe[1].posicion == 2:
+                                self.cont_mid = 1
+                            # ----------------
+                            self.cont_bot += 1
+                            self.heroe[2].posicion = self.cont_bot
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[2].linea = "bot"
+                            self.bCicColBot = True
+
+                # Colisiones de Robot
+                if not self.bRobColTop:
+                    if rectRob.colliderect(rectColTop):  # Colision con rect en top
+                        if self.cont_top <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[3].linea == "mid":
+                                if self.heroe[3].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "mid":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_mid = 1
+                            elif self.heroe[3].posicion == 2:
+                                self.cont_mid = 1
+                            if self.heroe[3].linea == "bot":
+                                if self.heroe[3].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "bot":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_bot = 1
+                            elif self.heroe[3].posicion == 2:
+                                self.cont_bot = 1
+                            # ----------------
+                            self.cont_top += 1
+                            self.heroe[3].posicion = self.cont_top
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[3].linea = "top"
+                            self.bRobColTop = True
+
+                if not self.bRobColMid:
+                    if rectRob.colliderect(rectColMid):  # Colision con rect en mid
+                        if self.cont_mid <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[3].linea == "top":
+                                if self.heroe[3].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "top":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_top = 1
+                            elif self.heroe[3].posicion == 2:
+                                self.cont_top = 1
+                            if self.heroe[3].linea == "bot":
+                                if self.heroe[3].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "bot":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_bot = 1
+                            elif self.heroe[3].posicion == 2:
+                                self.cont_bot = 1
+                            # ----------------
+                            self.cont_mid += 1
+                            self.heroe[3].posicion = self.cont_mid
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[3].linea = "mid"
+                            self.bRobColMid = True
+
+                if not self.bRobColBot:
+                    if rectRob.colliderect(rectColBot):  # Colision con rect en bot
+                        if self.cont_bot <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[3].linea == "top":
+                                if self.heroe[3].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "top":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_top = 1
+                            elif self.heroe[3].posicion == 2:
+                                self.cont_top = 1
+                            if self.heroe[3].linea == "mid":
+                                if self.heroe[3].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "mid":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_mid = 1
+                            elif self.heroe[3].posicion == 2:
+                                self.cont_mid = 1
+                            # ----------------
+                            self.cont_bot += 1
+                            self.heroe[3].posicion = self.cont_bot
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[3].linea = "bot"
+                            self.bRobColBot = True
+
+                # Colisiones de Elfa
+                if not self.bElfColTop:
+                    if rectElf.colliderect(rectColTop):  # Colision con rect en top
+                        if self.cont_top <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[4].linea == "mid":
+                                if self.heroe[4].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "mid":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_mid = 1
+                            elif self.heroe[4].posicion == 2:
+                                self.cont_mid = 1
+                            if self.heroe[4].linea == "bot":
+                                if self.heroe[4].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "bot":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_bot = 1
+                            elif self.heroe[4].posicion == 2:
+                                self.cont_bot = 1
+                            # ----------------
+                            self.cont_top += 1
+                            self.heroe[4].posicion = self.cont_top
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[4].linea = "top"
+                            self.bElfColTop = True
+
+                if not self.bRobColMid:
+                    if rectRob.colliderect(rectColMid):  # Colision con rect en mid
+                        if self.cont_mid <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[4].linea == "top":
+                                if self.heroe[4].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "top":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_top = 1
+                            elif self.heroe[4].posicion == 2:
+                                self.cont_top = 1
+                            if self.heroe[4].linea == "bot":
+                                if self.heroe[4].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "bot":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_bot = 1
+                            elif self.heroe[4].posicion == 2:
+                                self.cont_bot = 1
+                            # ----------------
+                            self.cont_mid += 1
+                            self.heroe[4].posicion = self.cont_mid
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[4].linea = "mid"
+                            self.bElfColMid = True
+
+                if not self.bElfColBot:
+                    if rectElf.colliderect(rectColBot):  # Colision con rect en bot
+                        if self.cont_bot <= 2:
+                            # Reiniciar las posiciones al cambiar hero de linea
+                            if self.heroe[4].linea == "top":
+                                if self.heroe[4].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "top":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_top = 1
+                            elif self.heroe[4].posicion == 2:
+                                self.cont_top = 1
+                            if self.heroe[4].linea == "mid":
+                                if self.heroe[4].posicion == 1:
+                                    for her in self.heroe:
+                                        if her.linea == "mid":
+                                            if her.posicion == 2:
+                                                her.posicion = 1
+                                    self.cont_mid = 1
+                            elif self.heroe[4].posicion == 2:
+                                self.cont_mid = 1
+                            # ----------------
+                            self.cont_bot += 1
+                            self.heroe[4].posicion = self.cont_bot
+                            # self.heroe[0].posicion = 2#
+                            self.heroe[4].linea = "bot"
+                            self.bElfColBot = True
 
 
                 # ----Se acaba mover heroes a las lineas
+
 
                 # pygame.time.delay(50)
                 pygame.time.delay(25)
@@ -1355,16 +1901,456 @@ def game():
                         self.torres[3].hit()
                         self.peleaTop = 0
             # PELEAS MID
+            if self.subdito[6].x == 921 and self.subdito[9].x == 952:
+                # FASE 1
+                if self.buenosMid > 0 and self.malosMid > 0:
+                    self.peleaMid = 1
+                    # TURNO DE LOS BUENOS
+                    for i in range(3):  # For turno minions
+                        salir = True
+                        while salir:
+                            n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
+                            if n == 1:
+                                atacarA = random.choice(range(9, 12))
+                                print("ataco a", self.subdito[atacarA].id, "que tiene", self.subdito[atacarA].health)
+                                if self.subdito[atacarA].health > 0:
+                                    self.subdito[atacarA].hit()
+                                    salir = False
+                                if self.subdito[9].health <= 0 and self.subdito[10].health <= 0 and self.subdito[
+                                    11].health <= 0:
+                                    salir = False
+                            elif n == 2:
+                                """atacarA = random.choice(range(0, len(self.heroe)))
+                                if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
+                                    self.villano[atacarA].hit()
+                                    salir = False"""
+
+                    for her in self.heroe:  # For turno heroes
+                        if her.linea == "mid":
+                            salir = True
+                            while salir:
+                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                if n == 1:
+                                    atacarA = random.choice(range(9, 12))
+                                    if self.subdito[atacarA].health > 0:
+                                        self.subdito[atacarA].health -= her.dano
+                                        salir = False
+                                    if self.subdito[9].health <= 0 and self.subdito[10].health <= 0 and self.subdito[
+                                        11].health <= 0:
+                                        salir = False
+                                elif n == 2:
+                                    """atacarA = random.choice(range(0, len(self.villano)))
+                                    if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
+                                        self.villano[atacarA].health -= her.dano
+                                        salir = False"""
+
+                    # TURNO DE LOS MALOS
+
+                    for i in range(3):  # For turno minions
+                        salir = True
+                        while salir:
+                            n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                            if n == 1:
+                                atacarA = random.choice(range(6, 9))
+                                if self.subdito[atacarA].health > 0:
+                                    self.subdito[atacarA].hit()
+                                    salir = False
+                                if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
+                                    8].health <= 0:
+                                    salir = False
+                            elif n == 2:
+                                atacarA = random.choice(range(0, len(self.heroe)))
+                                if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
+                                    self.heroe[atacarA].hit()
+                                    salir = False
+
+                    """for vil in self.villano:  # For turno villanos
+                        if vil.linea == "mid":
+                            salir = True
+                            while salir:
+                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                if n == 1:
+                                    atacarA = random.choice(range(6, 9))
+                                    if self.subdito[atacarA].health > 0:
+                                        self.subdito[atacarA].health -= vil.dano
+                                        salir = False
+                                if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[8].health <= 0:
+                                    salir = False
+                                elif n == 2:
+                                    atacarA = random.choice(range(0, len(self.villano)))
+                                    if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
+                                        self.heroe[atacarA].health -= vil.dano
+                                        salir = False"""
+
+            elif self.subdito[6].y == 655 and self.subdito[9].y == 559:
+                # FASE 2V - Malos
+                # FASE 2D - Buenos
+                if self.buenosMid > 0 and self.malosMid > 0:
+                    self.peleaMid = 1
+                    # TURNO DE LOS BUENOS
+                    for i in range(3):  # For turno minions
+                        salir = True
+                        while salir:
+                            n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
+                            if n == 1:
+                                atacarA = random.choice(range(9, 12))
+                                print("ataco a", self.subdito[atacarA].id, "que tiene", self.subdito[atacarA].health)
+                                if self.subdito[atacarA].health > 0:
+                                    self.subdito[atacarA].hit()
+                                    salir = False
+                                if self.subdito[9].health <= 0 and self.subdito[10].health <= 0 and self.subdito[
+                                    11].health <= 0:
+                                    salir = False
+                            elif n == 2:
+                                """atacarA = random.choice(range(0, len(self.heroe)))
+                                if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
+                                    self.villano[atacarA].hit()
+                                    salir = False"""
+
+                    for her in self.heroe:  # For turno heroes
+                        if her.linea == "mid":
+                            salir = True
+                            while salir:
+                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                if n == 1:
+                                    atacarA = random.choice(range(9, 12))
+                                    if self.subdito[atacarA].health > 0:
+                                        self.subdito[atacarA].health -= her.dano
+                                        salir = False
+                                    if self.subdito[9].health <= 0 and self.subdito[10].health <= 0 and self.subdito[
+                                        11].health <= 0:
+                                        salir = False
+                                elif n == 2:
+                                    """atacarA = random.choice(range(0, len(self.villano)))
+                                    if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
+                                        self.villano[atacarA].health -= her.dano
+                                        salir = False"""
+
+                    # TURNO DE LOS MALOS
+
+                    for i in range(3):  # For turno minions
+                        salir = True
+                        while salir:
+                            n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                            if n == 1:
+                                atacarA = random.choice(range(6, 9))
+                                if self.subdito[atacarA].health > 0:
+                                    self.subdito[atacarA].hit()
+                                    salir = False
+                                if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
+                                    8].health <= 0:
+                                    salir = False
+                            elif n == 2:
+                                atacarA = random.choice(range(0, len(self.heroe)))
+                                if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
+                                    self.heroe[atacarA].hit()
+                                    salir = False
+
+                    """for vil in self.villano:  # For turno villanos
+                        if vil.linea == "mid":
+                            salir = True
+                            while salir:
+                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                if n == 1:
+                                    atacarA = random.choice(range(6, 9))
+                                    if self.subdito[atacarA].health > 0:
+                                        self.subdito[atacarA].health -= vil.dano
+                                        salir = False
+                                if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[8].health <= 0:
+                                    salir = False
+                                elif n == 2:
+                                    atacarA = random.choice(range(0, len(self.villano)))
+                                    if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
+                                        self.heroe[atacarA].health -= vil.dano
+                                        salir = False"""
+
+
+            elif self.subdito[6].y == 745 and self.subdito[9].y == 715:
+                # FASE 3V - Malos
+                # FASE 3D - Buenos
+                if self.buenosMid > 0 and self.malosMid > 0:
+                    self.peleaMid = 1
+                    # TURNO DE LOS BUENOS
+                    for i in range(3):  # For turno minions
+                        salir = True
+                        while salir:
+                            n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
+                            if n == 1:
+                                atacarA = random.choice(range(9, 12))
+                                print("ataco a", self.subdito[atacarA].id, "que tiene", self.subdito[atacarA].health)
+                                if self.subdito[atacarA].health > 0:
+                                    self.subdito[atacarA].hit()
+                                    salir = False
+                                if self.subdito[9].health <= 0 and self.subdito[10].health <= 0 and self.subdito[
+                                    11].health <= 0:
+                                    salir = False
+                            elif n == 2:
+                                """atacarA = random.choice(range(0, len(self.heroe)))
+                                if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
+                                    self.villano[atacarA].hit()
+                                    salir = False"""
+
+                    for her in self.heroe:  # For turno heroes
+                        if her.linea == "mid":
+                            salir = True
+                            while salir:
+                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                if n == 1:
+                                    atacarA = random.choice(range(9, 12))
+                                    if self.subdito[atacarA].health > 0:
+                                        self.subdito[atacarA].health -= her.dano
+                                        salir = False
+                                    if self.subdito[9].health <= 0 and self.subdito[10].health <= 0 and self.subdito[
+                                        11].health <= 0:
+                                        salir = False
+                                elif n == 2:
+                                    """atacarA = random.choice(range(0, len(self.villano)))
+                                    if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
+                                        self.villano[atacarA].health -= her.dano
+                                        salir = False"""
+
+                    # TURNO DE LOS MALOS
+
+                    for i in range(3):  # For turno minions
+                        salir = True
+                        while salir:
+                            n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                            if n == 1:
+                                atacarA = random.choice(range(6, 9))
+                                if self.subdito[atacarA].health > 0:
+                                    self.subdito[atacarA].hit()
+                                    salir = False
+                                if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
+                                    8].health <= 0:
+                                    salir = False
+                            elif n == 2:
+                                atacarA = random.choice(range(0, len(self.heroe)))
+                                if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
+                                    self.heroe[atacarA].hit()
+                                    salir = False
+
+                    """for vil in self.villano:  # For turno villanos
+                        if vil.linea == "mid":
+                            salir = True
+                            while salir:
+                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                if n == 1:
+                                    atacarA = random.choice(range(6, 9))
+                                    if self.subdito[atacarA].health > 0:
+                                        self.subdito[atacarA].health -= vil.dano
+                                        salir = False
+                                if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[8].health <= 0:
+                                    salir = False
+                                elif n == 2:
+                                    atacarA = random.choice(range(0, len(self.villano)))
+                                    if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
+                                        self.heroe[atacarA].health -= vil.dano
+                                        salir = False"""
+
+
+            elif self.subdito[6].x == 1044 and self.subdito[9].x == 1135:
+                # FASE 2D - Malos
+                # FASE 2V - Buenos
+                if self.buenosMid > 0 and self.malosMid > 0:
+                    self.peleaMid = 1
+                    # TURNO DE LOS BUENOS
+                    for i in range(3):  # For turno minions
+                        salir = True
+                        while salir:
+                            n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
+                            if n == 1:
+                                atacarA = random.choice(range(9, 12))
+                                print("ataco a", self.subdito[atacarA].id, "que tiene", self.subdito[atacarA].health)
+                                if self.subdito[atacarA].health > 0:
+                                    self.subdito[atacarA].hit()
+                                    salir = False
+                                if self.subdito[9].health <= 0 and self.subdito[10].health <= 0 and self.subdito[
+                                    11].health <= 0:
+                                    salir = False
+                            elif n == 2:
+                                """atacarA = random.choice(range(0, len(self.heroe)))
+                                if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
+                                    self.villano[atacarA].hit()
+                                    salir = False"""
+
+                    for her in self.heroe:  # For turno heroes
+                        if her.linea == "mid":
+                            salir = True
+                            while salir:
+                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                if n == 1:
+                                    atacarA = random.choice(range(9, 12))
+                                    if self.subdito[atacarA].health > 0:
+                                        self.subdito[atacarA].health -= her.dano
+                                        salir = False
+                                    if self.subdito[9].health <= 0 and self.subdito[10].health <= 0 and self.subdito[
+                                        11].health <= 0:
+                                        salir = False
+                                elif n == 2:
+                                    """atacarA = random.choice(range(0, len(self.villano)))
+                                    if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
+                                        self.villano[atacarA].health -= her.dano
+                                        salir = False"""
+
+                    # TURNO DE LOS MALOS
+
+                    for i in range(3):  # For turno minions
+                        salir = True
+                        while salir:
+                            n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                            if n == 1:
+                                atacarA = random.choice(range(6, 9))
+                                if self.subdito[atacarA].health > 0:
+                                    self.subdito[atacarA].hit()
+                                    salir = False
+                                if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
+                                    8].health <= 0:
+                                    salir = False
+                            elif n == 2:
+                                atacarA = random.choice(range(0, len(self.heroe)))
+                                if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
+                                    self.heroe[atacarA].hit()
+                                    salir = False
+
+                    """for vil in self.villano:  # For turno villanos
+                        if vil.linea == "mid":
+                            salir = True
+                            while salir:
+                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                if n == 1:
+                                    atacarA = random.choice(range(6, 9))
+                                    if self.subdito[atacarA].health > 0:
+                                        self.subdito[atacarA].health -= vil.dano
+                                        salir = False
+                                if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[8].health <= 0:
+                                    salir = False
+                                elif n == 2:
+                                    atacarA = random.choice(range(0, len(self.villano)))
+                                    if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
+                                        self.heroe[atacarA].health -= vil.dano
+                                        salir = False"""
+
+
+            elif self.subdito[6].x == 1125 and self.subdito[9].x == 1219:
+                # FASE 3D - Malos
+                # FASE 3V - Buenos
+                if self.buenosMid > 0 and self.malosMid > 0:
+                    self.peleaMid = 1
+                    # TURNO DE LOS BUENOS
+                    for i in range(3):  # For turno minions
+                        salir = True
+                        while salir:
+                            n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
+                            if n == 1:
+                                atacarA = random.choice(range(9, 12))
+                                print("ataco a", self.subdito[atacarA].id, "que tiene", self.subdito[atacarA].health)
+                                if self.subdito[atacarA].health > 0:
+                                    self.subdito[atacarA].hit()
+                                    salir = False
+                                if self.subdito[9].health <= 0 and self.subdito[10].health <= 0 and self.subdito[
+                                    11].health <= 0:
+                                    salir = False
+                            elif n == 2:
+                                """atacarA = random.choice(range(0, len(self.heroe)))
+                                if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
+                                    self.villano[atacarA].hit()
+                                    salir = False"""
+
+                    for her in self.heroe:  # For turno heroes
+                        if her.linea == "mid":
+                            salir = True
+                            while salir:
+                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                if n == 1:
+                                    atacarA = random.choice(range(9, 12))
+                                    if self.subdito[atacarA].health > 0:
+                                        self.subdito[atacarA].health -= her.dano
+                                        salir = False
+                                    if self.subdito[9].health <= 0 and self.subdito[10].health <= 0 and self.subdito[
+                                        11].health <= 0:
+                                        salir = False
+                                elif n == 2:
+                                    """atacarA = random.choice(range(0, len(self.villano)))
+                                    if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
+                                        self.villano[atacarA].health -= her.dano
+                                        salir = False"""
+
+                    # TURNO DE LOS MALOS
+
+                    for i in range(3):  # For turno minions
+                        salir = True
+                        while salir:
+                            n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                            if n == 1:
+                                atacarA = random.choice(range(6, 9))
+                                if self.subdito[atacarA].health > 0:
+                                    self.subdito[atacarA].hit()
+                                    salir = False
+                                if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
+                                    8].health <= 0:
+                                    salir = False
+                            elif n == 2:
+                                atacarA = random.choice(range(0, len(self.heroe)))
+                                if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
+                                    self.heroe[atacarA].hit()
+                                    salir = False
+
+                    """for vil in self.villano:  # For turno villanos
+                        if vil.linea == "mid":
+                            salir = True
+                            while salir:
+                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                if n == 1:
+                                    atacarA = random.choice(range(6, 9))
+                                    if self.subdito[atacarA].health > 0:
+                                        self.subdito[atacarA].health -= vil.dano
+                                        salir = False
+                                if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[8].health <= 0:
+                                    salir = False
+                                elif n == 2:
+                                    atacarA = random.choice(range(0, len(self.villano)))
+                                    if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
+                                        self.heroe[atacarA].health -= vil.dano
+                                        salir = False"""
+
+            sumaHerMid = 0
+            for her in self.heroe:
+                if her.linea == "mid":
+                    sumaHerMid = sumaHerMid + her.health
+            sumaVilMid = 0
+            """for vil in self.villano:
+                if vil.linea == "mid":
+                    sumaVilMid = sumaVilMid + vil.health"""
+
+            self.buenosMid = self.subdito[6].health + self.subdito[7].health + self.subdito[8].health + sumaHerMid
+            self.malosMid = self.subdito[9].health + self.subdito[10].health + self.subdito[11].health + sumaVilMid
+            print(self.buenosMid, "-", self.malosMid)
+            if self.peleaMid:
+                if self.buenosMid > 0 and self.malosMid <= 0:
+                    if self.torre_mid_1_derecha:
+                        self.torres[4].hit()
+                        self.peleaMid = 0
+                    elif self.torre_mid_2_derecha:
+                        self.torres[5].hit()
+                        self.peleaMid = 0
+                elif self.buenosMid <= 0 and self.malosMid > 0:
+                    if self.torre_mid_1_izquierda:
+                        self.torres[6].hit()
+                        self.peleaMid = 0
+                    elif self.torre_mid_2_izquierda:
+                        self.torres[7].hit()
+                        self.peleaMid = 0
+
             # PELEAS BOT
             if self.subdito[12].x == 1246 and self.subdito[15].x == 1324:
                 # FASE 1
                 if self.buenosBot > 0 and self.malosBot > 0:
                     self.peleaBot = 1
                     #TURNO DE LOS BUENOS
-                    for i in range(3): #For turno minions
+                    for i in range(3): # For turno minions
                         salir = True
                         while salir:
-                            n = random.choice(range(1, 3)) #1 ataca a minion 2 ataca a villano
+                            n = random.choice(range(1, 3)) # 1 ataca a minion 2 ataca a villano
                             if n == 1:
                                 atacarA = random.choice(range(15, 18))
                                 print("ataco a", self.subdito[atacarA].id, "que tiene", self.subdito[atacarA].health)
@@ -1379,7 +2365,7 @@ def game():
                                     self.villano[atacarA].hit()
                                     salir = False"""
 
-                    for her in self.heroe:  #For turno heroes
+                    for her in self.heroe:  # For turno heroes
                         if her.linea == "bot":
                             salir = True
                             while salir:
@@ -1397,7 +2383,7 @@ def game():
                                         self.villano[atacarA].health -= her.dano
                                         salir = False"""
 
-                    #TURNO DE LOS MALOS
+                    # TURNO DE LOS MALOS
 
                     for i in range(3):  # For turno minions
                         salir = True
@@ -1757,12 +2743,7 @@ def game():
                     sumaVilBot = sumaVilBot + vil.health"""
 
             self.buenosBot = self.subdito[12].health + self.subdito[13].health + self.subdito[14].health + sumaHerBot
-            print(len(self.subdito))
-            print(self.subdito[15].id)
-            print(self.subdito[16].id)
-            print(self.subdito[17].id)
             self.malosBot = self.subdito[15].health + self.subdito[16].health + self.subdito[17].health + sumaVilBot
-            print(self.buenosBot, "-", self.malosBot)
             if self.peleaBot:
                 if self.buenosBot > 0 and self.malosBot <= 0:
                     if self.torre_bot_1_derecha:
@@ -1780,13 +2761,6 @@ def game():
                         self.torres[11].hit()
                         self.peleaBot = 0
 
-            print("Vida m1", self.subdito[15].health, self.subdito[15].x)
-            print("Vida m2", self.subdito[16].health)
-            print("Vida m3", self.subdito[17].health)
-            print("Vida b1", self.subdito[12].health, self.subdito[12].x)
-            print("Vida b2", self.subdito[13].health, self.subdito[13].x)
-            print("Vida b3", self.subdito[14].health)
-
             # ----------
 
             for min in self.subdito:
@@ -1800,9 +2774,9 @@ def game():
                 tor.draw_health_bar(self.win)
             # pygame.display.update() Este update esta ahora en donde se pinta el tiempo
 
+
     g = Game()
     g.run()
-
 
 if __name__ == '__main__':
     main()
