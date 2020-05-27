@@ -509,6 +509,8 @@ class Accion_elfa:
                     win.blit(self.img, (self.x, self.y))
                 else:
                     win.blit(self.img, (10000, 10000))
+                    self.health = 0
+                    self.path_pos = 0
 
                 self.mover()
                 if self.health > 0:
@@ -534,33 +536,34 @@ class Accion_elfa:
         :return: NADA
         """
         # SELECCIONAR EL PATH SEGUN EL ESTADO DE LA PARTIDA
-        if self.torre_1_derecha and self.torre_2_derecha and self.torre_1_izquierda and self.torre_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif not self.torre_1_derecha and self.torre_2_derecha and not self.torre_1_izquierda and self.torre_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif not self.torre_1_derecha and not self.torre_2_derecha and not self.torre_1_izquierda and not self.torre_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif self.torre_1_derecha and self.torre_2_derecha and not self.torre_1_izquierda and self.torre_2_izquierda:
-            print("FASE 2D")
-            self.path = self.path2d
-        elif self.torre_1_derecha and self.torre_2_derecha and not self.torre_1_izquierda and not self.torre_2_izquierda:
-            print("FASE 3D")
-            self.path = self.path3d
-        elif not self.torre_1_derecha and self.torre_2_derecha and not self.torre_1_izquierda and not self.torre_2_izquierda:
-            print("FASE 3D")
-            self.path = self.path3d
-        elif not self.torre_1_derecha and self.torre_2_derecha and self.torre_1_izquierda and self.torre_2_izquierda:
-            print("FASE 2V")
-            self.path = self.path2v
-        elif not self.torre_1_derecha and not self.torre_2_derecha and self.torre_1_izquierda and self.torre_2_izquierda:
-            print("FASE 3V")
-            self.path = self.path3v
-        elif not self.torre_1_derecha and not self.torre_2_derecha and not self.torre_1_izquierda and self.torre_2_izquierda:
-            print("FASE 3V")
-            self.path = self.path3v
+        if self.health > 0:
+            if self.torre_1_derecha and self.torre_2_derecha and self.torre_1_izquierda and self.torre_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif not self.torre_1_derecha and self.torre_2_derecha and not self.torre_1_izquierda and self.torre_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif not self.torre_1_derecha and not self.torre_2_derecha and not self.torre_1_izquierda and not self.torre_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif self.torre_1_derecha and self.torre_2_derecha and not self.torre_1_izquierda and self.torre_2_izquierda:
+                print("FASE 2D")
+                self.path = self.path2d
+            elif self.torre_1_derecha and self.torre_2_derecha and not self.torre_1_izquierda and not self.torre_2_izquierda:
+                print("FASE 3D")
+                self.path = self.path3d
+            elif not self.torre_1_derecha and self.torre_2_derecha and not self.torre_1_izquierda and not self.torre_2_izquierda:
+                print("FASE 3D")
+                self.path = self.path3d
+            elif not self.torre_1_derecha and self.torre_2_derecha and self.torre_1_izquierda and self.torre_2_izquierda:
+                print("FASE 2V")
+                self.path = self.path2v
+            elif not self.torre_1_derecha and not self.torre_2_derecha and self.torre_1_izquierda and self.torre_2_izquierda:
+                print("FASE 3V")
+                self.path = self.path3v
+            elif not self.torre_1_derecha and not self.torre_2_derecha and not self.torre_1_izquierda and self.torre_2_izquierda:
+                print("FASE 3V")
+                self.path = self.path3v
 
         #TODA ESTA MIERDA ES PARA CALCULAR EL MOVIMIENTO ENTRE PUNTOS MEDIANTE EL TEOREMA DE PITAGORAS(VECTORES)
         if self.health <= 0:
