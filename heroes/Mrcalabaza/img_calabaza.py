@@ -23,4 +23,4 @@ class Img_calabaza(Accion_calabaza):
 
     def __init__(self):
         super().__init__()
-        self.id = "Calabaza_bot"
+        self.id = "Calabaza"
