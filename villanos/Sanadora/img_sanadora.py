@@ -23,4 +23,4 @@ class Img_sanadora(Accion_sanadora):
 
     def __init__(self):
         super().__init__()
-        self.id = "Minato"
+        self.id = "Sanadora"

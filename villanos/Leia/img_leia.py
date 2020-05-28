@@ -23,4 +23,4 @@ class Img_leia(Accion_leia):
 
     def __init__(self):
         super().__init__()
-        self.id = "Minato"
+        self.id = "Leia"

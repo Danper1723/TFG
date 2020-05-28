@@ -11,8 +11,8 @@ class Accion_minion_bueno_bot_3:
         self.width = 64
         self.height = 64
         self.contador_animacion = 0
-        self.health = 100  # Barra de vida
-        self.max_health = 100#Barra de vida
+        self.health = 200  # Barra de vida
+        self.max_health = 200#Barra de vida
         self.vel = 3
         self.path = [(661,910),(664,910),(667,910),(670,910),(673,910),(676,910),(679,910),(682,910),(685,910),(688,910),(691,910),(694,910),(697,910),(700,910),(703,910),(706,910),(709,910),(712,910),(715,910),(718,910),(721,910),(724,910),(727,910),(730,910),(733,910),(736,910),(739,910),(742,910),(745,910),(748,910),(751,910),(754,910),(757,910),(760,910),(763,910),(766,910),(769,910),(772,910),(775,910),(778,910),(781,910),(784,910),(787,910),(790,910),(793,910),(796,910),(799,910),(802,910),(805,910),(808,910),(811,910),(814,910),(817,910),(820,910),(823,910),(826,910),(829,910),(832,910),(835,910),(838,910),(841,910),(844,910),(847,910),(850,910),(853,910),(856,910),(859,910),(862,910),(865,910),(868,910),(871,910),(874,910),(877,910),(880,910),(883,910),(886,910),(889,910),(892,910),(895,910),(898,910),(901,910),(904,910),(907,910),(910,910),(913,910),(916,910),(919,910),(922,910),(925,910),(928,910),(931,910),(934,910),(937,910),(940,910),(943,910),(946,910),(949,910),(952,910),(955,910),(958,910),(961,910),(964,910),(967,910),(970,910),(973,910),(976,910),(979,910),(982,910),(985,910),(988,910),(991,910),(994,910),(997,910),(1000,910),(1003,910),(1006,910),(1009,910),(1012,910),(1015,910),(1018,910),(1021,910),(1024,910),(1027,910),(1030,910),(1033,910),(1036,910),(1039,910),(1042,910),(1045,910),(1048,910),(1051,910),(1054,910),(1057,910),(1060,910),(1063,910),(1066,910),(1069,910),(1072,910),(1075,910),(1078,910),(1081,910),(1084,910),(1087,910),(1090,910),(1093,910),(1096,910),(1099,910),(1102,910),(1105,910),(1108,910),(1111,910),(1114,910),(1117,910),(1120,910),(1123,910),(1126,910),(1129,910),(1132,910),(1135,910),(1138,910),(1141,910),(1144,910),(1147,910),(1150,910),(1153,910),(1156,910),(1159,910),(1162,910),(1165,910),(1168,910),(1171,910),(1174,910),(1177,910),(1180,910),(1183,910),(1186,910),(1189,910),(1192,910),(1195,910),(1198,910),(1201,910),(1204,910),(1207,910),(1210,910),(1213,910),(1216,910),(1219,910),(1222,910),(1225,907),(1228,904),(1231,901),(1234,898),(1237,895),(1240,892),(1243,889),(1246,886),(1249,883),(1252,880),(1255,877),(1258,874),(1261,871),(1264,868),(1267,865),(1270,862)]
         
@@ -182,6 +182,7 @@ class Accion_minion_bueno_bot_3:
             else:
                 win.blit(self.img, (10000, 10000))
                 self.health = 0
+                self.path_pos = 0
 
                 # if
 
@@ -209,33 +210,34 @@ class Accion_minion_bueno_bot_3:
         :return: NADA
         """
         # SELECCIONAR EL PATH SEGUN EL ESTADO DE LA PARTIDA
-        if self.torre_bot_1_derecha and self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 2D")
-            self.path = self.path2d
-        elif self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
-            print("FASE 3D")
-            self.path = self.path3d
-        elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
-            print("FASE 3D")
-            self.path = self.path3d
-        elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 2V")
-            self.path = self.path2v
-        elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 3V")
-            self.path = self.path3v
-        elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 3V")
-            self.path = self.path3v
+        if self.health > 0:
+            if self.torre_bot_1_derecha and self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 2D")
+                self.path = self.path2d
+            elif self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
+                print("FASE 3D")
+                self.path = self.path3d
+            elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
+                print("FASE 3D")
+                self.path = self.path3d
+            elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 2V")
+                self.path = self.path2v
+            elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 3V")
+                self.path = self.path3v
+            elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 3V")
+                self.path = self.path3v
 
         #TODA ESTA MIERDA ES PARA CALCULAR EL MOVIMIENTO ENTRE PUNTOS MEDIANTE EL TEOREMA DE PITAGORAS(VECTORES)
         if self.health <= 0:
@@ -304,7 +306,7 @@ class Accion_minion_bueno_bot_3:
         else:
             self.estado = True
             self.contador_animacion = 0
-            self.health = 100  # Barra de vida
+            self.health = 200  # Barra de vida
             self.x = self.path[0][0]
             self.y = self.path[0][1]
             self.dis = 0

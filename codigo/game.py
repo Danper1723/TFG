@@ -76,6 +76,10 @@ from villanos.Leia.img_leia import Img_leia
 from villanos.Sanadora.img_sanadora import Img_sanadora
 from villanos.Sombrero.img_sombrero import Img_sombrero
 
+# IMNPORTAR ACCIONES DE LAS DOS BASES
+from bases.accion_base_buenos import Accion_base_buenos
+from bases.accion_base_malos import Accion_base_malos
+
 from sonidos.sonidos import Sonidos
 
 from pygame.constants import MOUSEBUTTONDOWN, K_ESCAPE, KEYDOWN, QUIT, RLEACCEL
@@ -284,7 +288,10 @@ def game():
                 Img_calabaza(), Img_asesina(), Img_cicatrices(), Img_robot(), Img_elfa()
             ]
             self.villano = [
-                Img_minato(), Img_caballero(), Img_leia(), Img_sanadora(), Img_sombrero()
+                Img_caballero(), Img_leia(), Img_minato(), Img_sombrero(), Img_sanadora()
+            ]
+            self.bases = [
+                Accion_base_buenos(), Accion_base_malos()
             ]
             self.dinero = 100
 
@@ -552,7 +559,6 @@ def game():
 
             # ---Terminan las variables de arrastrar heroes
             while run:
-
                 if not self.subdito[15].estado:
                     for event in pygame.event.get():
                         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -700,11 +706,16 @@ def game():
                 self.escribir_Vida_Malos()
 
                 self.escribir_Vida_Villanos()
+                self.escribir_Vida_Heroes()
+
+                self.escribir_Estadisticas_Heroes()
+                self.escribir_Estadisticas_Villanos()
+
+                self.escribir_Vida_Bases()
 
                 pygame.display.update()#Este es el update general NO SE TOCA
 
                 # ------
-
                 self.draw()
             pygame.quit()
 
@@ -744,6 +755,9 @@ def game():
 
             for tor in self.torres:
                 tor.draw_health_bar(self.win)
+
+            for bas in self.bases:
+                bas.draw_health_bar(self.win)
 
         def conexion_Bd(self):
             conexion = sqlite3.connect('../datos.db')
@@ -944,6 +958,7 @@ def game():
             # Colisiones de Asesina
             if not self.bAseColTop:
                 if self.rectAse.colliderect(self.rectColTop):  # Colision con rect en top
+                    print("asesina ha colisionado en top")
                     if self.cont_top <= 2:
                         # Reiniciar las posiciones al cambiar hero de linea
                         if self.heroe[1].linea == "mid":
@@ -967,7 +982,7 @@ def game():
                         # ----------------
                         self.cont_top += 1
                         self.heroe[1].posicion = self.cont_top
-                        # self.heroe[0].posicion = 2#
+                        # self.heroe[1].posicion = 2#
                         self.heroe[1].linea = "top"
                         self.bAseColTop = True
 
@@ -1235,7 +1250,7 @@ def game():
                         self.heroe[4].linea = "top"
                         self.bElfColTop = True
 
-            if not self.bRobColMid:
+            if not self.bElfColMid:
                 if self.rectElf.colliderect(self.rectColMid):  # Colision con rect en mid
                     if self.cont_mid <= 2:
                         # Reiniciar las posiciones al cambiar hero de linea
@@ -1477,13 +1492,205 @@ def game():
 
         def escribir_Vida_Villanos(self):
             fuenteHealth = pygame.font.Font("../VT323-Regular.ttf", 23)  # Vida villanos
-            vidaMinato = str(self.villano[0].health)  # 3º
+
+            #CABALLERO
+            vidaCaballero = str(self.villano[0].health)
+            if int(vidaCaballero) < 10:
+                vidaCaballero = "00" + str(vidaCaballero)
+            elif int(vidaCaballero) < 100:
+                vidaCaballero = "0" + str(vidaCaballero)
+            vidaCaballero = fuenteHealth.render(vidaCaballero, 0, (0, 0, 0))
+            self.win.blit(vidaCaballero, (1532, 171))
+
+            # LEIA
+            vidaLeia = str(self.villano[1].health)
+            if int(vidaLeia) < 10:
+                vidaLeia = "00" + str(vidaLeia)
+            elif int(vidaLeia) < 100:
+                vidaLeia = "0" + str(vidaLeia)
+            vidaLeia = fuenteHealth.render(vidaLeia, 0, (0, 0, 0))
+            self.win.blit(vidaLeia, (1532, 274))
+
+            # MINATO
+            vidaMinato = str(self.villano[2].health)  # 3º
             if int(vidaMinato) < 10:
                 vidaMinato = "00" + str(vidaMinato)
             elif int(vidaMinato) < 100:
                 vidaMinato = "0" + str(vidaMinato)
             vidaMinato = fuenteHealth.render(vidaMinato, 0, (0, 0, 0))
             self.win.blit(vidaMinato, (1532, 377))
+
+            # SOMBRERO
+            vidaSombrero = str(self.villano[3].health)
+            if int(vidaSombrero) < 10:
+                vidaSombrero = "00" + str(vidaSombrero)
+            elif int(vidaSombrero) < 100:
+                vidaSombrero = "0" + str(vidaSombrero)
+            vidaSombrero = fuenteHealth.render(vidaSombrero, 0, (0, 0, 0))
+            self.win.blit(vidaSombrero, (1532, 480))
+
+            # SANADORA
+            vidaSanadora = str(self.villano[4].health)
+            if int(vidaSanadora) < 10:
+                vidaSanadora = "00" + str(vidaSanadora)
+            elif int(vidaSanadora) < 100:
+                vidaSanadora = "0" + str(vidaSanadora)
+            vidaSanadora = fuenteHealth.render(vidaSanadora, 0, (0, 0, 0))
+            self.win.blit(vidaSanadora, (1532, 583))
+
+        def escribir_Vida_Heroes(self):
+            fuenteHealth = pygame.font.Font("../VT323-Regular.ttf", 23)  # Vida heroes
+
+            # MRCALABAZA
+            vidaMrCalabaza = str(self.heroe[0].health)
+            if int(vidaMrCalabaza) < 10:
+                vidaMrCalabaza = "00" + str(vidaMrCalabaza)
+            elif int(vidaMrCalabaza) < 100:
+                vidaMrCalabaza = "0" + str(vidaMrCalabaza)
+            vidaMrCalabaza = fuenteHealth.render(vidaMrCalabaza, 0, (0, 0, 0))
+            self.win.blit(vidaMrCalabaza, (365, 171))
+
+            # ASESINA
+            vidaAsesina = str(self.heroe[1].health)
+            if int(vidaAsesina) < 10:
+                vidaAsesina = "00" + str(vidaAsesina)
+            elif int(vidaAsesina) < 100:
+                vidaAsesina = "0" + str(vidaAsesina)
+            vidaAsesina = fuenteHealth.render(vidaAsesina, 0, (0, 0, 0))
+            self.win.blit(vidaAsesina, (365, 274))
+
+            # CICATRICES
+            vidaCicatrices = str(self.heroe[2].health)
+            if int(vidaCicatrices) < 10:
+                vidaCicatrices = "00" + str(vidaCicatrices)
+            elif int(vidaCicatrices) < 100:
+                vidaCicatrices = "0" + str(vidaCicatrices)
+            vidaCicatrices = fuenteHealth.render(vidaCicatrices, 0, (0, 0, 0))
+            self.win.blit(vidaCicatrices, (365, 377))
+
+            # ROBOT
+            vidaRobot = str(self.heroe[3].health)
+            if int(vidaRobot) < 10:
+                vidaRobot = "00" + str(vidaRobot)
+            elif int(vidaRobot) < 100:
+                vidaRobot = "0" + str(vidaRobot)
+            vidaRobot = fuenteHealth.render(vidaRobot, 0, (0, 0, 0))
+            self.win.blit(vidaRobot, (365, 480))
+
+            # ELFA
+            vidaElfa = str(self.heroe[4].health)
+            if int(vidaElfa) < 10:
+                vidaElfa = "00" + str(vidaElfa)
+            elif int(vidaElfa) < 100:
+                vidaElfa = "0" + str(vidaElfa)
+            vidaElfa = fuenteHealth.render(vidaElfa, 0, (0, 0, 0))
+            self.win.blit(vidaElfa, (365, 583))
+
+        def escribir_Estadisticas_Heroes(self):
+            fuenteHealth = pygame.font.Font("../VT323-Regular.ttf", 30)  # Vida heroes
+
+            # MRCALABAZA
+            dano = fuenteHealth.render(str(self.heroe[0].dano), 0, (0, 0, 0))
+            armadura = str(self.heroe[0].armadura)
+            armadura = str(armadura) + "%"
+            armadura = fuenteHealth.render(armadura, 0, (0, 0, 0))
+            self.win.blit(dano, (230, 175))
+            self.win.blit(armadura, (230, 210))
+
+
+            # ASESINA
+            dano = fuenteHealth.render(str(self.heroe[1].dano), 0, (0, 0, 0))
+            armadura = str(self.heroe[1].armadura)
+            armadura = str(armadura) + "%"
+            armadura = fuenteHealth.render(armadura, 0, (0, 0, 0))
+            self.win.blit(dano, (230, 277))
+            self.win.blit(armadura, (230, 312))
+
+            # CICATRICES
+            dano = fuenteHealth.render(str(self.heroe[2].dano), 0, (0, 0, 0))
+            armadura = str(self.heroe[2].armadura)
+            armadura = str(armadura) + "%"
+            armadura = fuenteHealth.render(armadura, 0, (0, 0, 0))
+            self.win.blit(dano, (230, 381))
+            self.win.blit(armadura, (230, 416))
+
+            # ROBOT
+            dano = fuenteHealth.render(str(self.heroe[3].dano), 0, (0, 0, 0))
+            armadura = str(self.heroe[3].armadura)
+            armadura = str(armadura) + "%"
+            armadura = fuenteHealth.render(armadura, 0, (0, 0, 0))
+            self.win.blit(dano, (230, 483))
+            self.win.blit(armadura, (230, 518))
+
+            # ELFO
+            dano = fuenteHealth.render(str(self.heroe[4].dano), 0, (0, 0, 0))
+            armadura = str(self.heroe[4].armadura)
+            armadura = str(armadura) + "%"
+            armadura = fuenteHealth.render(armadura, 0, (0, 0, 0))
+            self.win.blit(dano, (230, 586))
+            self.win.blit(armadura, (230, 621))
+
+        def escribir_Estadisticas_Villanos(self):
+            fuenteHealth = pygame.font.Font("../VT323-Regular.ttf", 30)  # Vida heroes
+
+            # CABALLERO
+            dano = fuenteHealth.render(str(self.villano[0].dano), 0, (0, 0, 0))
+            armadura = str(self.villano[0].armadura)
+            armadura = str(armadura) + "%"
+            armadura = fuenteHealth.render(armadura, 0, (0, 0, 0))
+            self.win.blit(dano, (1656, 175))
+            self.win.blit(armadura, (1656, 210))
+
+            # LEIA
+            dano = fuenteHealth.render(str(self.villano[1].dano), 0, (0, 0, 0))
+            armadura = str(self.villano[1].armadura)
+            armadura = str(armadura) + "%"
+            armadura = fuenteHealth.render(armadura, 0, (0, 0, 0))
+            self.win.blit(dano, (1656, 277))
+            self.win.blit(armadura, (1656, 312))
+
+            # MINATO
+            dano = fuenteHealth.render(str(self.villano[2].dano), 0, (0, 0, 0))
+            armadura = str(self.villano[2].armadura)
+            armadura = str(armadura) + "%"
+            armadura = fuenteHealth.render(armadura, 0, (0, 0, 0))
+            self.win.blit(dano, (1656, 381))
+            self.win.blit(armadura, (1656, 416))
+
+            # SOMBRERO
+            dano = fuenteHealth.render(str(self.villano[3].dano), 0, (0, 0, 0))
+            armadura = str(self.villano[3].armadura)
+            armadura = str(armadura) + "%"
+            armadura = fuenteHealth.render(armadura, 0, (0, 0, 0))
+            self.win.blit(dano, (1656, 483))
+            self.win.blit(armadura, (1656, 518))
+
+            # SANADORA
+            dano = fuenteHealth.render(str(self.villano[4].dano), 0, (0, 0, 0))
+            armadura = str(self.villano[4].armadura)
+            armadura = str(armadura) + "%"
+            armadura = fuenteHealth.render(armadura, 0, (0, 0, 0))
+            self.win.blit(dano, (1656, 586))
+            self.win.blit(armadura, (1656, 621))
+
+        def escribir_Vida_Bases(self):
+            fuenteHealth = pygame.font.Font("../VT323-Regular.ttf", 27)  # Vida heroes
+
+            vidaBaseB = str(self.bases[0].health)
+            if int(vidaBaseB) < 10:
+                vidaBaseB = "00" + str(vidaBaseB)
+            elif int(vidaBaseB) < 100:
+                vidaBaseB = "0" + str(vidaBaseB)
+            vidaBaseB = fuenteHealth.render(vidaBaseB, 0, (0, 0, 0))
+            self.win.blit(vidaBaseB, (513, 842))
+
+            vidaBaseM = str(self.bases[1].health)
+            if int(vidaBaseM) < 10:
+                vidaBaseM = "00" + str(vidaBaseM)
+            elif int(vidaBaseM) < 100:
+                vidaBaseM = "0" + str(vidaBaseM)
+            vidaBaseM = fuenteHealth.render(vidaBaseM, 0, (0, 0, 0))
+            self.win.blit(vidaBaseM, (1377, 106))
 
         def conexion_Bd_Torres(self):
             conexion = sqlite3.connect('../datos.db')
@@ -1760,7 +1967,7 @@ def game():
                                     if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "top":
                                         if turnosBuenos < 2:
                                             dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
+                                            self.villano[atacarA].health = self.villano[atacarA].health - dano
                                             turnosBuenos += 1
                                         elif turnosBuenos == 2:
                                             dano = random.choice(range(15, 19))
@@ -1786,6 +1993,7 @@ def game():
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "top":
                                             self.villano[atacarA].health -= her.dano - int((
                                                     (her.dano * self.villano[atacarA].armadura) / 100))
+                                            print(her.id, "ataca a ", self.villano[atacarA].id, "haciendo", her.dano - int(((her.dano * self.villano[atacarA].armadura) / 100)))
                                             salir = False
 
                         # TURNO DE LOS MALOS
@@ -1818,7 +2026,7 @@ def game():
                                             turnoMalos += 1
                                         elif turnoMalos == 2:
                                             dano = random.choice(range(15, 19))
-                                            self.heroe[atacarA].health = self.heroe[atacarA].health  - int((
+                                            self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                     (dano * self.heroe[atacarA].armadura) / 100))
                                         salir = False
 
@@ -1832,14 +2040,16 @@ def game():
                                         if self.subdito[atacarA].health > 0:
                                             self.subdito[atacarA].health -= vil.dano
                                             salir = False
-                                    if self.subdito[0].health <= 0 and self.subdito[1].health <= 0 and self.subdito[
-                                        2].health <= 0:
-                                        salir = False
+                                        if self.subdito[0].health <= 0 and self.subdito[1].health <= 0 and self.subdito[
+                                            2].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "top":
                                             self.heroe[atacarA].health -= vil.dano - int((
                                                     (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            print(vil.id, "ataca a ", self.heroe[atacarA].id, "haciendo", vil.dano - int((
+                                                    (vil.dano * self.heroe[atacarA].armadura) / 100)))
                                             salir = False
 
             elif self.subdito[0].y == 597 and self.subdito[3].y == 470:
@@ -1875,7 +2085,7 @@ def game():
                                     if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "top":
                                         if turnosBuenos < 2:
                                             dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
+                                            self.villano[atacarA].health = self.villano[atacarA].health - dano
                                             turnosBuenos += 1
                                         elif turnosBuenos == 2:
                                             dano = random.choice(range(15, 19))
@@ -1947,9 +2157,9 @@ def game():
                                         if self.subdito[atacarA].health > 0:
                                             self.subdito[atacarA].health -= vil.dano
                                             salir = False
-                                    if self.subdito[0].health <= 0 and self.subdito[1].health <= 0 and self.subdito[
-                                        2].health <= 0:
-                                        salir = False
+                                        if self.subdito[0].health <= 0 and self.subdito[1].health <= 0 and self.subdito[
+                                            2].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "top":
@@ -1990,7 +2200,7 @@ def game():
                                     if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "top":
                                         if turnosBuenos < 2:
                                             dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
+                                            self.villano[atacarA].health = self.villano[atacarA].health - dano
                                             turnosBuenos += 1
                                         elif turnosBuenos == 2:
                                             dano = random.choice(range(15, 19))
@@ -2062,9 +2272,9 @@ def game():
                                         if self.subdito[atacarA].health > 0:
                                             self.subdito[atacarA].health -= vil.dano
                                             salir = False
-                                    if self.subdito[0].health <= 0 and self.subdito[1].health <= 0 and self.subdito[
-                                        2].health <= 0:
-                                        salir = False
+                                        if self.subdito[0].health <= 0 and self.subdito[1].health <= 0 and self.subdito[
+                                            2].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "top":
@@ -2105,7 +2315,7 @@ def game():
                                     if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "top":
                                         if turnosBuenos < 2:
                                             dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
+                                            self.villano[atacarA].health = self.villano[atacarA].health - dano
                                             turnosBuenos += 1
                                         elif turnosBuenos == 2:
                                             dano = random.choice(range(15, 19))
@@ -2177,9 +2387,9 @@ def game():
                                         if self.subdito[atacarA].health > 0:
                                             self.subdito[atacarA].health -= vil.dano
                                             salir = False
-                                    if self.subdito[0].health <= 0 and self.subdito[1].health <= 0 and self.subdito[
-                                        2].health <= 0:
-                                        salir = False
+                                        if self.subdito[0].health <= 0 and self.subdito[1].health <= 0 and self.subdito[
+                                            2].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "top":
@@ -2220,7 +2430,7 @@ def game():
                                     if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "top":
                                         if turnosBuenos < 2:
                                             dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
+                                            self.villano[atacarA].health = self.villano[atacarA].health - dano
                                             turnosBuenos += 1
                                         elif turnosBuenos == 2:
                                             dano = random.choice(range(15, 19))
@@ -2292,9 +2502,9 @@ def game():
                                         if self.subdito[atacarA].health > 0:
                                             self.subdito[atacarA].health -= vil.dano
                                             salir = False
-                                    if self.subdito[0].health <= 0 and self.subdito[1].health <= 0 and self.subdito[
-                                        2].health <= 0:
-                                        salir = False
+                                        if self.subdito[0].health <= 0 and self.subdito[1].health <= 0 and self.subdito[
+                                            2].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "top":
@@ -2317,17 +2527,71 @@ def game():
             if self.peleaTop:
                 if self.buenosTop > 0 and self.malosTop == 0:
                     if self.torre_top_1_derecha:
-                        self.torres[0].hit()
+                        if self.subdito[0].health > 0:
+                            self.torres[0].hit()
+                        if self.subdito[1].health > 0:
+                            self.torres[0].hit()
+                        if self.subdito[2].health > 0:
+                            self.torres[0].hit()
+                        for her in self.heroe:
+                            if her.linea == "top" and her.health > 0:
+                                self.torres[0].hit()
                         self.peleaTop = 0
                     elif self.torre_top_2_derecha:
-                        self.torres[1].hit()
+                        if self.subdito[0].health > 0:
+                            self.torres[1].hit()
+                        if self.subdito[1].health > 0:
+                            self.torres[1].hit()
+                        if self.subdito[2].health > 0:
+                            self.torres[1].hit()
+                        for her in self.heroe:
+                            if her.linea == "top" and her.health > 0:
+                                self.torres[1].hit()
+                        self.peleaTop = 0
+                    elif not self.torre_top_1_derecha and not self.torre_top_2_derecha:
+                        if self.subdito[0].health > 0:
+                            self.bases[1].hit()
+                        if self.subdito[1].health > 0:
+                            self.bases[1].hit()
+                        if self.subdito[2].health > 0:
+                            self.bases[1].hit()
+                        for her in self.heroe:
+                            if her.linea == "top" and her.health > 0:
+                                self.bases[1].hit()
                         self.peleaTop = 0
                 elif self.buenosTop == 0 and self.malosTop > 0:
                     if self.torre_top_1_izquierda:
-                        self.torres[2].hit()
+                        if self.subdito[3].health > 0:
+                            self.torres[2].hit()
+                        if self.subdito[4].health > 0:
+                            self.torres[2].hit()
+                        if self.subdito[5].health > 0:
+                            self.torres[2].hit()
+                        for vil in self.villano:
+                            if vil.linea == "top" and vil.health > 0:
+                                self.torres[2].hit()
                         self.peleaTop = 0
                     elif self.torre_top_2_izquierda:
-                        self.torres[3].hit()
+                        if self.subdito[3].health > 0:
+                            self.torres[3].hit()
+                        if self.subdito[4].health > 0:
+                            self.torres[3].hit()
+                        if self.subdito[5].health > 0:
+                            self.torres[3].hit()
+                        for vil in self.villano:
+                            if vil.linea == "top" and vil.health > 0:
+                                self.torres[3].hit()
+                        self.peleaTop = 0
+                    elif not self.torre_top_1_izquierda and not self.torre_top_2_izquierda:
+                        if self.subdito[3].health > 0:
+                            self.bases[0].hit()
+                        if self.subdito[4].health > 0:
+                            self.bases[0].hit()
+                        if self.subdito[5].health > 0:
+                            self.bases[0].hit()
+                        for vil in self.villano:
+                            if vil.linea == "top" and vil.health > 0:
+                                self.bases[0].hit()
                         self.peleaTop = 0
 
         def peleas_Mid(self):
@@ -2363,7 +2627,7 @@ def game():
                                     if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
                                         if turnosBuenos < 2:
                                             dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
+                                            self.villano[atacarA].health = self.villano[atacarA].health - dano
                                             turnosBuenos += 1
                                         elif turnosBuenos == 2:
                                             dano = random.choice(range(15, 19))
@@ -2435,8 +2699,8 @@ def game():
                                         if self.subdito[atacarA].health > 0:
                                             self.subdito[atacarA].health -= vil.dano
                                             salir = False
-                                    if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[8].health <= 0:
-                                        salir = False
+                                        if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[8].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
@@ -2478,7 +2742,7 @@ def game():
                                     if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
                                         if turnosBuenos < 2:
                                             dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
+                                            self.villano[atacarA].health = self.villano[atacarA].health - dano
                                             turnosBuenos += 1
                                         elif turnosBuenos == 2:
                                             dano = random.choice(range(15, 19))
@@ -2551,9 +2815,9 @@ def game():
                                         if self.subdito[atacarA].health > 0:
                                             self.subdito[atacarA].health -= vil.dano
                                             salir = False
-                                    if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
-                                        8].health <= 0:
-                                        salir = False
+                                        if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
+                                            8].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
@@ -2595,7 +2859,7 @@ def game():
                                     if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
                                         if turnosBuenos < 2:
                                             dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
+                                            self.villano[atacarA].health = self.villano[atacarA].health - dano
                                             turnosBuenos += 1
                                         elif turnosBuenos == 2:
                                             dano = random.choice(range(15, 19))
@@ -2668,9 +2932,9 @@ def game():
                                         if self.subdito[atacarA].health > 0:
                                             self.subdito[atacarA].health -= vil.dano
                                             salir = False
-                                    if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
-                                        8].health <= 0:
-                                        salir = False
+                                        if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
+                                            8].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
@@ -2712,7 +2976,7 @@ def game():
                                     if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
                                         if turnosBuenos < 2:
                                             dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
+                                            self.villano[atacarA].health = self.villano[atacarA].health - dano
                                             turnosBuenos += 1
                                         elif turnosBuenos == 2:
                                             dano = random.choice(range(15, 19))
@@ -2785,9 +3049,9 @@ def game():
                                         if self.subdito[atacarA].health > 0:
                                             self.subdito[atacarA].health -= vil.dano
                                             salir = False
-                                    if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
-                                        8].health <= 0:
-                                        salir = False
+                                        if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
+                                            8].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
@@ -2829,7 +3093,7 @@ def game():
                                     if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
                                         if turnosBuenos < 2:
                                             dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
+                                            self.villano[atacarA].health = self.villano[atacarA].health - dano
                                             turnosBuenos += 1
                                         elif turnosBuenos == 2:
                                             dano = random.choice(range(15, 19))
@@ -2902,9 +3166,9 @@ def game():
                                         if self.subdito[atacarA].health > 0:
                                             self.subdito[atacarA].health -= vil.dano
                                             salir = False
-                                    if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
-                                        8].health <= 0:
-                                        salir = False
+                                        if self.subdito[6].health <= 0 and self.subdito[7].health <= 0 and self.subdito[
+                                            8].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
@@ -2927,17 +3191,73 @@ def game():
             if self.peleaMid:
                 if self.buenosMid > 0 and self.malosMid == 0:
                     if self.torre_mid_1_derecha:
-                        self.torres[4].hit()
+                        if self.torre_top_1_derecha:
+                            if self.subdito[6].health > 0:
+                                self.torres[4].hit()
+                            if self.subdito[7].health > 0:
+                                self.torres[4].hit()
+                            if self.subdito[8].health > 0:
+                                self.torres[4].hit()
+                            for her in self.heroe:
+                                if her.linea == "mid" and her.health > 0:
+                                    self.torres[4].hit()
                         self.peleaMid = 0
                     elif self.torre_mid_2_derecha:
-                        self.torres[5].hit()
+                        if self.subdito[6].health > 0:
+                            self.torres[5].hit()
+                        if self.subdito[7].health > 0:
+                            self.torres[5].hit()
+                        if self.subdito[8].health > 0:
+                            self.torres[5].hit()
+                        for her in self.heroe:
+                            if her.linea == "mid" and her.health > 0:
+                                self.torres[5].hit()
+                        self.peleaMid = 0
+                    elif not self.torre_mid_1_derecha and not self.torre_mid_2_derecha:
+                        if self.subdito[6].health > 0:
+                            self.bases[1].hit()
+                        if self.subdito[7].health > 0:
+                            self.bases[1].hit()
+                        if self.subdito[8].health > 0:
+                            self.bases[1].hit()
+                        for her in self.heroe:
+                            if her.linea == "mid" and her.health > 0:
+                                self.bases[1].hit()
                         self.peleaMid = 0
                 elif self.buenosMid == 0 and self.malosMid > 0:
                     if self.torre_mid_1_izquierda:
-                        self.torres[6].hit()
+                        if self.subdito[9].health > 0:
+                            self.torres[6].hit()
+                        if self.subdito[10].health > 0:
+                            self.torres[6].hit()
+                        if self.subdito[11].health > 0:
+                            self.torres[6].hit()
+                        for vil in self.villano:
+                            if vil.linea == "mid" and vil.health > 0:
+                                self.torres[6].hit()
                         self.peleaMid = 0
                     elif self.torre_mid_2_izquierda:
-                        self.torres[7].hit()
+                        if self.torre_mid_1_izquierda:
+                            if self.subdito[9].health > 0:
+                                self.torres[7].hit()
+                            if self.subdito[10].health > 0:
+                                self.torres[7].hit()
+                            if self.subdito[11].health > 0:
+                                self.torres[7].hit()
+                            for vil in self.villano:
+                                if vil.linea == "mid" and vil.health > 0:
+                                    self.torres[7].hit()
+                        self.peleaMid = 0
+                    elif not self.torre_mid_1_izquierda and not self.torre_mid_2_izquierda:
+                        if self.subdito[9].health > 0:
+                            self.bases[0].hit()
+                        if self.subdito[10].health > 0:
+                            self.bases[0].hit()
+                        if self.subdito[11].health > 0:
+                            self.bases[0].hit()
+                        for vil in self.villano:
+                            if vil.linea == "mid" and vil.health > 0:
+                                self.bases[0].hit()
                         self.peleaMid = 0
 
         def peleas_Bot(self):
@@ -2972,7 +3292,7 @@ def game():
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "bot":
                                             if turnosBuenos < 2:
                                                 dano = random.choice(range(10, 14))
-                                                self.villano[atacarA].health = self.subdito[atacarA].health - dano
+                                                self.villano[atacarA].health = self.villano[atacarA].health - dano
                                                 turnosBuenos += 1
                                             elif turnosBuenos == 2:
                                                 dano = random.choice(range(15, 19))
@@ -3042,8 +3362,8 @@ def game():
                                             if self.subdito[atacarA].health > 0:
                                                 self.subdito[atacarA].health -= vil.dano
                                                 salir = False
-                                        if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and self.subdito[14].health <= 0:
-                                            salir = False
+                                            if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and self.subdito[14].health <= 0:
+                                                salir = False
                                         elif n == 2:
                                             atacarA = random.choice(range(0, len(self.heroe)))
                                             if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
@@ -3055,52 +3375,27 @@ def game():
                 # FASE 2V - Malos
                 # FASE 2D - Buenos
                 if self.peleaBot:
-                    if self.buenosBot > 0 and self.malosBot > 0:
-                        self.peleaBot = 1
-                        # TURNO DE LOS BUENOS
-                        turnosBuenos = 0
-                        for i in range(3):  # For turno minions
-                            salir = True
-                            while salir:
-                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
-                                if n == 1:
-                                    atacarA = random.choice(range(15, 18))
-                                    print("ataco a", self.subdito[atacarA].id, "que tiene",
-                                          self.subdito[atacarA].health)
-                                    if self.subdito[atacarA].health > 0:
-                                        if turnosBuenos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnosBuenos += 1
-                                        elif turnosBuenos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                        salir = False
-                                    if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and self.subdito[
-                                        17].health <= 0:
-                                        salir = False
-                                elif n == 2:
-                                    atacarA = random.choice(range(0, len(self.villano)))
-                                    if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "bot":
-                                        if turnosBuenos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnosBuenos += 1
-                                        elif turnosBuenos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.villano[atacarA].health = self.villano[atacarA].health - int((
-                                                    (dano * self.villano[atacarA].armadura) / 100))
-                                        salir = False
-
-                        for her in self.heroe:  # For turno heroes
-                            if her.linea == "bot":
+                    if self.comPeleaBot:
+                        if self.buenosBot > 0 and self.malosBot > 0:
+                            self.peleaBot = 1
+                            # TURNO DE LOS BUENOS
+                            turnosBuenos = 0
+                            for i in range(3):  # For turno minions
                                 salir = True
                                 while salir:
-                                    n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                    n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
                                     if n == 1:
                                         atacarA = random.choice(range(15, 18))
+                                        print("ataco a", self.subdito[atacarA].id, "que tiene",
+                                              self.subdito[atacarA].health)
                                         if self.subdito[atacarA].health > 0:
-                                            self.subdito[atacarA].health -= her.dano
+                                            if turnosBuenos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
+                                                turnosBuenos += 1
+                                            elif turnosBuenos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
                                             salir = False
                                         if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and \
                                                 self.subdito[17].health <= 0:
@@ -3108,114 +3403,116 @@ def game():
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.villano)))
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "bot":
-                                            self.villano[atacarA].health -= her.dano - int((
-                                                    (her.dano * self.villano[atacarA].armadura) / 100))
+                                            if turnosBuenos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.villano[atacarA].health = self.villano[atacarA].health - dano
+                                                turnosBuenos += 1
+                                            elif turnosBuenos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.villano[atacarA].health = self.villano[atacarA].health - int((
+                                                        (dano * self.villano[atacarA].armadura) / 100))
                                             salir = False
 
-                        # TURNO DE LOS MALOS
-                        turnoMalos = 0
-                        for i in range(3):  # For turno minions
-                            salir = True
-                            while salir:
-                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
-                                if n == 1:
-                                    atacarA = random.choice(range(12, 15))
-                                    if self.subdito[atacarA].health > 0:
-                                        if turnoMalos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnoMalos += 1
-                                        elif turnoMalos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                        salir = False
-                                    if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and self.subdito[
-                                        14].health <= 0:
-                                        salir = False
-                                elif n == 2:
-                                    atacarA = random.choice(range(0, len(self.heroe)))
-                                    if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
-                                        if turnoMalos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.heroe[atacarA].health = self.heroe[atacarA].health - int((
-                                                    (dano * self.heroe[atacarA].armadura) / 100))
-                                            turnoMalos += 1
-                                        elif turnoMalos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.heroe[atacarA].health = self.heroe[atacarA].health - int((
-                                                    (dano * self.heroe[atacarA].armadura) / 100))
-                                        salir = False
+                            for her in self.heroe:  # For turno heroes
+                                if her.linea == "bot":
+                                    salir = True
+                                    while salir:
+                                        n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                        if n == 1:
+                                            atacarA = random.choice(range(15, 18))
+                                            if self.subdito[atacarA].health > 0:
+                                                self.subdito[atacarA].health -= her.dano
+                                                salir = False
+                                            if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and \
+                                                    self.subdito[17].health <= 0:
+                                                salir = False
+                                        elif n == 2:
+                                            atacarA = random.choice(range(0, len(self.villano)))
+                                            if self.villano[atacarA].health > 0 and self.villano[
+                                                atacarA].linea == "bot":
+                                                self.villano[atacarA].health -= her.dano - int((
+                                                        (her.dano * self.villano[atacarA].armadura) / 100))
+                                                salir = False
 
-                        for vil in self.villano:  # For turno villanos
-                            if vil.linea == "bot":
+                            # TURNO DE LOS MALOS
+                            turnoMalos = 0
+                            for i in range(3):  # For turno minions
                                 salir = True
                                 while salir:
                                     n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
                                     if n == 1:
                                         atacarA = random.choice(range(12, 15))
                                         if self.subdito[atacarA].health > 0:
-                                            self.subdito[atacarA].health -= vil.dano
+                                            if turnoMalos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
+                                                turnoMalos += 1
+                                            elif turnoMalos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
                                             salir = False
-                                    if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and self.subdito[
-                                        14].health <= 0:
-                                        salir = False
+                                        if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and \
+                                                self.subdito[14].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
-                                            self.heroe[atacarA].health -= vil.dano - int((
-                                                    (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            if turnoMalos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.heroe[atacarA].health = self.heroe[atacarA].health - int((
+                                                        (dano * self.heroe[atacarA].armadura) / 100))
+                                                turnoMalos += 1
+                                            elif turnoMalos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.heroe[atacarA].health = self.heroe[atacarA].health - int((
+                                                        (dano * self.heroe[atacarA].armadura) / 100))
                                             salir = False
+
+                            for vil in self.villano:  # For turno villanos
+                                if vil.linea == "bot":
+                                    salir = True
+                                    while salir:
+                                        n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                        if n == 1:
+                                            atacarA = random.choice(range(12, 15))
+                                            if self.subdito[atacarA].health > 0:
+                                                self.subdito[atacarA].health -= vil.dano
+                                                salir = False
+                                            if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and \
+                                                    self.subdito[14].health <= 0:
+                                                salir = False
+                                        elif n == 2:
+                                            atacarA = random.choice(range(0, len(self.heroe)))
+                                            if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
+                                                self.heroe[atacarA].health -= vil.dano - int((
+                                                        (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                                salir = False
 
             elif self.subdito[12].x == 685 and self.subdito[15].x == 796:
                 # FASE 3V - Malos
                 # FASE 3D - Buenos
                 if self.peleaBot:
-                    if self.buenosBot > 0 and self.malosBot > 0:
-                        self.peleaBot = 1
-                        # TURNO DE LOS BUENOS
-                        turnosBuenos = 0
-                        for i in range(3):  # For turno minions
-                            salir = True
-                            while salir:
-                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
-                                if n == 1:
-                                    atacarA = random.choice(range(15, 18))
-                                    print("ataco a", self.subdito[atacarA].id, "que tiene",
-                                          self.subdito[atacarA].health)
-                                    if self.subdito[atacarA].health > 0:
-                                        if turnosBuenos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnosBuenos += 1
-                                        elif turnosBuenos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                        salir = False
-                                    if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and self.subdito[
-                                        17].health <= 0:
-                                        salir = False
-                                elif n == 2:
-                                    atacarA = random.choice(range(0, len(self.villano)))
-                                    if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "bot":
-                                        if turnosBuenos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnosBuenos += 1
-                                        elif turnosBuenos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.villano[atacarA].health = self.villano[atacarA].health - int((
-                                                    (dano * self.villano[atacarA].armadura) / 100))
-                                        salir = False
-
-                        for her in self.heroe:  # For turno heroes
-                            if her.linea == "bot":
+                    if self.comPeleaBot:
+                        if self.buenosBot > 0 and self.malosBot > 0:
+                            self.peleaBot = 1
+                            # TURNO DE LOS BUENOS
+                            turnosBuenos = 0
+                            for i in range(3):  # For turno minions
                                 salir = True
                                 while salir:
-                                    n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                    n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
                                     if n == 1:
                                         atacarA = random.choice(range(15, 18))
+                                        print("ataco a", self.subdito[atacarA].id, "que tiene",
+                                              self.subdito[atacarA].health)
                                         if self.subdito[atacarA].health > 0:
-                                            self.subdito[atacarA].health -= her.dano
+                                            if turnosBuenos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
+                                                turnosBuenos += 1
+                                            elif turnosBuenos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
                                             salir = False
                                         if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and \
                                                 self.subdito[17].health <= 0:
@@ -3223,114 +3520,116 @@ def game():
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.villano)))
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "bot":
-                                            self.villano[atacarA].health -= her.dano - int((
-                                                    (her.dano * self.villano[atacarA].armadura) / 100))
+                                            if turnosBuenos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.villano[atacarA].health = self.villano[atacarA].health - dano
+                                                turnosBuenos += 1
+                                            elif turnosBuenos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.villano[atacarA].health = self.villano[atacarA].health - int((
+                                                        (dano * self.villano[atacarA].armadura) / 100))
                                             salir = False
 
-                        # TURNO DE LOS MALOS
-                        turnoMalos = 0
-                        for i in range(3):  # For turno minions
-                            salir = True
-                            while salir:
-                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
-                                if n == 1:
-                                    atacarA = random.choice(range(12, 15))
-                                    if self.subdito[atacarA].health > 0:
-                                        if turnoMalos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnoMalos += 1
-                                        elif turnoMalos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                        salir = False
-                                    if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and self.subdito[
-                                        14].health <= 0:
-                                        salir = False
-                                elif n == 2:
-                                    atacarA = random.choice(range(0, len(self.heroe)))
-                                    if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
-                                        if turnoMalos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.heroe[atacarA].health = self.heroe[atacarA].health - int((
-                                                    (dano * self.heroe[atacarA].armadura) / 100))
-                                            turnoMalos += 1
-                                        elif turnoMalos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.heroe[atacarA].health = self.heroe[atacarA].health - int((
-                                                    (dano * self.heroe[atacarA].armadura) / 100))
-                                        salir = False
+                            for her in self.heroe:  # For turno heroes
+                                if her.linea == "bot":
+                                    salir = True
+                                    while salir:
+                                        n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                        if n == 1:
+                                            atacarA = random.choice(range(15, 18))
+                                            if self.subdito[atacarA].health > 0:
+                                                self.subdito[atacarA].health -= her.dano
+                                                salir = False
+                                            if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and \
+                                                    self.subdito[17].health <= 0:
+                                                salir = False
+                                        elif n == 2:
+                                            atacarA = random.choice(range(0, len(self.villano)))
+                                            if self.villano[atacarA].health > 0 and self.villano[
+                                                atacarA].linea == "bot":
+                                                self.villano[atacarA].health -= her.dano - int((
+                                                        (her.dano * self.villano[atacarA].armadura) / 100))
+                                                salir = False
 
-                        for vil in self.villano:  # For turno villanos
-                            if vil.linea == "bot":
+                            # TURNO DE LOS MALOS
+                            turnoMalos = 0
+                            for i in range(3):  # For turno minions
                                 salir = True
                                 while salir:
                                     n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
                                     if n == 1:
                                         atacarA = random.choice(range(12, 15))
                                         if self.subdito[atacarA].health > 0:
-                                            self.subdito[atacarA].health -= vil.dano
+                                            if turnoMalos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
+                                                turnoMalos += 1
+                                            elif turnoMalos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
                                             salir = False
-                                    if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and self.subdito[
-                                        14].health <= 0:
-                                        salir = False
+                                        if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and \
+                                                self.subdito[14].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
-                                            self.heroe[atacarA].health -= vil.dano - int((
-                                                    (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            if turnoMalos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.heroe[atacarA].health = self.heroe[atacarA].health - int((
+                                                        (dano * self.heroe[atacarA].armadura) / 100))
+                                                turnoMalos += 1
+                                            elif turnoMalos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.heroe[atacarA].health = self.heroe[atacarA].health - int((
+                                                        (dano * self.heroe[atacarA].armadura) / 100))
                                             salir = False
+
+                            for vil in self.villano:  # For turno villanos
+                                if vil.linea == "bot":
+                                    salir = True
+                                    while salir:
+                                        n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                        if n == 1:
+                                            atacarA = random.choice(range(12, 15))
+                                            if self.subdito[atacarA].health > 0:
+                                                self.subdito[atacarA].health -= vil.dano
+                                                salir = False
+                                            if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and \
+                                                    self.subdito[14].health <= 0:
+                                                salir = False
+                                        elif n == 2:
+                                            atacarA = random.choice(range(0, len(self.heroe)))
+                                            if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
+                                                self.heroe[atacarA].health -= vil.dano - int((
+                                                        (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                                salir = False
 
             elif self.subdito[12].y == 602 and self.subdito[15].y == 484:
                 # FASE 2D - Malos
                 # FASE 2V - Buenos
                 if self.peleaBot:
-                    if self.buenosBot > 0 and self.malosBot > 0:
-                        self.peleaBot = 1
-                        # TURNO DE LOS BUENOS
-                        turnosBuenos = 0
-                        for i in range(3):  # For turno minions
-                            salir = True
-                            while salir:
-                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
-                                if n == 1:
-                                    atacarA = random.choice(range(15, 18))
-                                    print("ataco a", self.subdito[atacarA].id, "que tiene",
-                                          self.subdito[atacarA].health)
-                                    if self.subdito[atacarA].health > 0:
-                                        if turnosBuenos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnosBuenos += 1
-                                        elif turnosBuenos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                        salir = False
-                                    if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and self.subdito[
-                                        17].health <= 0:
-                                        salir = False
-                                elif n == 2:
-                                    atacarA = random.choice(range(0, len(self.villano)))
-                                    if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "bot":
-                                        if turnosBuenos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnosBuenos += 1
-                                        elif turnosBuenos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.villano[atacarA].health = self.villano[atacarA].health - int((
-                                                    (dano * self.villano[atacarA].armadura) / 100))
-                                        salir = False
-
-                        for her in self.heroe:  # For turno heroes
-                            if her.linea == "bot":
+                    if self.comPeleaBot:
+                        if self.buenosBot > 0 and self.malosBot > 0:
+                            self.peleaBot = 1
+                            # TURNO DE LOS BUENOS
+                            turnosBuenos = 0
+                            for i in range(3):  # For turno minions
                                 salir = True
                                 while salir:
-                                    n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                    n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
                                     if n == 1:
                                         atacarA = random.choice(range(15, 18))
+                                        print("ataco a", self.subdito[atacarA].id, "que tiene",
+                                              self.subdito[atacarA].health)
                                         if self.subdito[atacarA].health > 0:
-                                            self.subdito[atacarA].health -= her.dano
+                                            if turnosBuenos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
+                                                turnosBuenos += 1
+                                            elif turnosBuenos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
                                             salir = False
                                         if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and \
                                                 self.subdito[17].health <= 0:
@@ -3338,114 +3637,116 @@ def game():
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.villano)))
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "bot":
-                                            self.villano[atacarA].health -= her.dano - int((
-                                                    (her.dano * self.villano[atacarA].armadura) / 100))
+                                            if turnosBuenos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.villano[atacarA].health = self.villano[atacarA].health - dano
+                                                turnosBuenos += 1
+                                            elif turnosBuenos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.villano[atacarA].health = self.villano[atacarA].health - int((
+                                                        (dano * self.villano[atacarA].armadura) / 100))
                                             salir = False
 
-                        # TURNO DE LOS MALOS
-                        turnoMalos = 0
-                        for i in range(3):  # For turno minions
-                            salir = True
-                            while salir:
-                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
-                                if n == 1:
-                                    atacarA = random.choice(range(12, 15))
-                                    if self.subdito[atacarA].health > 0:
-                                        if turnoMalos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnoMalos += 1
-                                        elif turnoMalos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                        salir = False
-                                    if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and self.subdito[
-                                        14].health <= 0:
-                                        salir = False
-                                elif n == 2:
-                                    atacarA = random.choice(range(0, len(self.heroe)))
-                                    if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
-                                        if turnoMalos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.heroe[atacarA].health = self.heroe[atacarA].health - int((
-                                                    (dano * self.heroe[atacarA].armadura) / 100))
-                                            turnoMalos += 1
-                                        elif turnoMalos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.heroe[atacarA].health = self.heroe[atacarA].health - int((
-                                                    (dano * self.heroe[atacarA].armadura) / 100))
-                                        salir = False
+                            for her in self.heroe:  # For turno heroes
+                                if her.linea == "bot":
+                                    salir = True
+                                    while salir:
+                                        n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                        if n == 1:
+                                            atacarA = random.choice(range(15, 18))
+                                            if self.subdito[atacarA].health > 0:
+                                                self.subdito[atacarA].health -= her.dano
+                                                salir = False
+                                            if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and \
+                                                    self.subdito[17].health <= 0:
+                                                salir = False
+                                        elif n == 2:
+                                            atacarA = random.choice(range(0, len(self.villano)))
+                                            if self.villano[atacarA].health > 0 and self.villano[
+                                                atacarA].linea == "bot":
+                                                self.villano[atacarA].health -= her.dano - int((
+                                                        (her.dano * self.villano[atacarA].armadura) / 100))
+                                                salir = False
 
-                        for vil in self.villano:  # For turno villanos
-                            if vil.linea == "bot":
+                            # TURNO DE LOS MALOS
+                            turnoMalos = 0
+                            for i in range(3):  # For turno minions
                                 salir = True
                                 while salir:
                                     n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
                                     if n == 1:
                                         atacarA = random.choice(range(12, 15))
                                         if self.subdito[atacarA].health > 0:
-                                            self.subdito[atacarA].health -= vil.dano
+                                            if turnoMalos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
+                                                turnoMalos += 1
+                                            elif turnoMalos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
                                             salir = False
-                                    if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and self.subdito[
-                                        14].health <= 0:
-                                        salir = False
+                                        if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and \
+                                                self.subdito[14].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
-                                            self.heroe[atacarA].health -= vil.dano - int((
-                                                    (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            if turnoMalos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.heroe[atacarA].health = self.heroe[atacarA].health - int((
+                                                        (dano * self.heroe[atacarA].armadura) / 100))
+                                                turnoMalos += 1
+                                            elif turnoMalos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.heroe[atacarA].health = self.heroe[atacarA].health - int((
+                                                        (dano * self.heroe[atacarA].armadura) / 100))
                                             salir = False
+
+                            for vil in self.villano:  # For turno villanos
+                                if vil.linea == "bot":
+                                    salir = True
+                                    while salir:
+                                        n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                        if n == 1:
+                                            atacarA = random.choice(range(12, 15))
+                                            if self.subdito[atacarA].health > 0:
+                                                self.subdito[atacarA].health -= vil.dano
+                                                salir = False
+                                            if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and \
+                                                    self.subdito[14].health <= 0:
+                                                salir = False
+                                        elif n == 2:
+                                            atacarA = random.choice(range(0, len(self.heroe)))
+                                            if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
+                                                self.heroe[atacarA].health -= vil.dano - int((
+                                                        (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                                salir = False
 
             elif self.subdito[12].y == 431 and self.subdito[15].y == 304:
                 # FASE 3D - Malos
                 # FASE 3V - Buenos
                 if self.peleaBot:
-                    if self.buenosBot > 0 and self.malosBot > 0:
-                        self.peleaBot = 1
-                        # TURNO DE LOS BUENOS
-                        turnosBuenos = 0
-                        for i in range(3):  # For turno minions
-                            salir = True
-                            while salir:
-                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
-                                if n == 1:
-                                    atacarA = random.choice(range(15, 18))
-                                    print("ataco a", self.subdito[atacarA].id, "que tiene",
-                                          self.subdito[atacarA].health)
-                                    if self.subdito[atacarA].health > 0:
-                                        if turnosBuenos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnosBuenos += 1
-                                        elif turnosBuenos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                        salir = False
-                                    if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and self.subdito[
-                                        17].health <= 0:
-                                        salir = False
-                                elif n == 2:
-                                    atacarA = random.choice(range(0, len(self.villano)))
-                                    if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "bot":
-                                        if turnosBuenos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.villano[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnosBuenos += 1
-                                        elif turnosBuenos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.villano[atacarA].health = self.villano[atacarA].health - int((
-                                                    (dano * self.villano[atacarA].armadura) / 100))
-                                        salir = False
-
-                        for her in self.heroe:  # For turno heroes
-                            if her.linea == "bot":
+                    if self.comPeleaBot:
+                        if self.buenosBot > 0 and self.malosBot > 0:
+                            self.peleaBot = 1
+                            # TURNO DE LOS BUENOS
+                            turnosBuenos = 0
+                            for i in range(3):  # For turno minions
                                 salir = True
                                 while salir:
-                                    n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                    n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a villano
                                     if n == 1:
                                         atacarA = random.choice(range(15, 18))
+                                        print("ataco a", self.subdito[atacarA].id, "que tiene",
+                                              self.subdito[atacarA].health)
                                         if self.subdito[atacarA].health > 0:
-                                            self.subdito[atacarA].health -= her.dano
+                                            if turnosBuenos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
+                                                turnosBuenos += 1
+                                            elif turnosBuenos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
                                             salir = False
                                         if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and \
                                                 self.subdito[17].health <= 0:
@@ -3453,63 +3754,90 @@ def game():
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.villano)))
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "bot":
-                                            self.villano[atacarA].health -= her.dano - int((
-                                                    (her.dano * self.villano[atacarA].armadura) / 100))
+                                            if turnosBuenos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.villano[atacarA].health = self.villano[atacarA].health - dano
+                                                turnosBuenos += 1
+                                            elif turnosBuenos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.villano[atacarA].health = self.villano[atacarA].health - int((
+                                                        (dano * self.villano[atacarA].armadura) / 100))
                                             salir = False
 
-                        # TURNO DE LOS MALOS
-                        turnoMalos = 0
-                        for i in range(3):  # For turno minions
-                            salir = True
-                            while salir:
-                                n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
-                                if n == 1:
-                                    atacarA = random.choice(range(12, 15))
-                                    if self.subdito[atacarA].health > 0:
-                                        if turnoMalos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                            turnoMalos += 1
-                                        elif turnoMalos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.subdito[atacarA].health = self.subdito[atacarA].health - dano
-                                        salir = False
-                                    if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and self.subdito[
-                                        14].health <= 0:
-                                        salir = False
-                                elif n == 2:
-                                    atacarA = random.choice(range(0, len(self.heroe)))
-                                    if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
-                                        if turnoMalos < 2:
-                                            dano = random.choice(range(10, 14))
-                                            self.heroe[atacarA].health = self.heroe[atacarA].health - int((
-                                                    (dano * self.heroe[atacarA].armadura) / 100))
-                                            turnoMalos += 1
-                                        elif turnoMalos == 2:
-                                            dano = random.choice(range(15, 19))
-                                            self.heroe[atacarA].health = self.heroe[atacarA].health - int((
-                                                    (dano * self.heroe[atacarA].armadura) / 100))
-                                        salir = False
+                            for her in self.heroe:  # For turno heroes
+                                if her.linea == "bot":
+                                    salir = True
+                                    while salir:
+                                        n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                        if n == 1:
+                                            atacarA = random.choice(range(15, 18))
+                                            if self.subdito[atacarA].health > 0:
+                                                self.subdito[atacarA].health -= her.dano
+                                                salir = False
+                                            if self.subdito[15].health <= 0 and self.subdito[16].health <= 0 and \
+                                                    self.subdito[17].health <= 0:
+                                                salir = False
+                                        elif n == 2:
+                                            atacarA = random.choice(range(0, len(self.villano)))
+                                            if self.villano[atacarA].health > 0 and self.villano[
+                                                atacarA].linea == "bot":
+                                                self.villano[atacarA].health -= her.dano - int((
+                                                        (her.dano * self.villano[atacarA].armadura) / 100))
+                                                salir = False
 
-                        for vil in self.villano:  # For turno villanos
-                            if vil.linea == "bot":
+                            # TURNO DE LOS MALOS
+                            turnoMalos = 0
+                            for i in range(3):  # For turno minions
                                 salir = True
                                 while salir:
                                     n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
                                     if n == 1:
                                         atacarA = random.choice(range(12, 15))
                                         if self.subdito[atacarA].health > 0:
-                                            self.subdito[atacarA].health -= vil.dano
+                                            if turnoMalos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
+                                                turnoMalos += 1
+                                            elif turnoMalos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.subdito[atacarA].health = self.subdito[atacarA].health - dano
                                             salir = False
-                                    if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and self.subdito[
-                                        14].health <= 0:
-                                        salir = False
+                                        if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and \
+                                                self.subdito[14].health <= 0:
+                                            salir = False
                                     elif n == 2:
                                         atacarA = random.choice(range(0, len(self.heroe)))
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
-                                            self.heroe[atacarA].health -= vil.dano - int((
-                                                    (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            if turnoMalos < 2:
+                                                dano = random.choice(range(10, 14))
+                                                self.heroe[atacarA].health = self.heroe[atacarA].health - int((
+                                                        (dano * self.heroe[atacarA].armadura) / 100))
+                                                turnoMalos += 1
+                                            elif turnoMalos == 2:
+                                                dano = random.choice(range(15, 19))
+                                                self.heroe[atacarA].health = self.heroe[atacarA].health - int((
+                                                        (dano * self.heroe[atacarA].armadura) / 100))
                                             salir = False
+
+                            for vil in self.villano:  # For turno villanos
+                                if vil.linea == "bot":
+                                    salir = True
+                                    while salir:
+                                        n = random.choice(range(1, 3))  # 1 ataca a minion 2 ataca a heroe
+                                        if n == 1:
+                                            atacarA = random.choice(range(12, 15))
+                                            if self.subdito[atacarA].health > 0:
+                                                self.subdito[atacarA].health -= vil.dano
+                                                salir = False
+                                            if self.subdito[12].health <= 0 and self.subdito[13].health <= 0 and \
+                                                    self.subdito[14].health <= 0:
+                                                salir = False
+                                        elif n == 2:
+                                            atacarA = random.choice(range(0, len(self.heroe)))
+                                            if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
+                                                self.heroe[atacarA].health -= vil.dano - int((
+                                                        (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                                salir = False
             sumaHerBot = 0
             for her in self.heroe:
                 if her.linea == "bot":
@@ -3525,18 +3853,72 @@ def game():
             if self.peleaBot:
                 if self.buenosBot > 0 and self.malosBot == 0:
                     if self.torre_bot_1_derecha:
-                        print("paso a pegar a bot", self.malosBot)
-                        self.torres[8].hit()
+                        if self.torre_mid_1_izquierda:
+                            if self.subdito[12].health > 0:
+                                self.torres[8].hit()
+                            if self.subdito[13].health > 0:
+                                self.torres[8].hit()
+                            if self.subdito[14].health > 0:
+                                self.torres[8].hit()
+                            for her in self.heroe:
+                                if her.linea == "bot" and her.health > 0:
+                                    self.torres[8].hit()
                         self.peleaBot = 0
                     elif self.torre_bot_2_derecha:
-                        self.torres[9].hit()
+                        if self.subdito[12].health > 0:
+                            self.torres[9].hit()
+                        if self.subdito[13].health > 0:
+                            self.torres[9].hit()
+                        if self.subdito[14].health > 0:
+                            self.torres[9].hit()
+                        for her in self.heroe:
+                            if her.linea == "bot" and her.health > 0:
+                                self.torres[9].hit()
+                        self.peleaBot = 0
+                    elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha:
+                        if self.subdito[12].health > 0:
+                            self.bases[1].hit()
+                        if self.subdito[13].health > 0:
+                            self.bases[1].hit()
+                        if self.subdito[14].health > 0:
+                            self.bases[1].hit()
+                        for her in self.heroe:
+                            if her.linea == "bot" and her.health > 0:
+                                self.bases[1].hit()
                         self.peleaBot = 0
                 elif self.buenosBot == 0 and self.malosBot > 0:
                     if self.torre_bot_1_izquierda:
-                        self.torres[10].hit()
+                        if self.subdito[15].health > 0:
+                            self.torres[10].hit()
+                        if self.subdito[16].health > 0:
+                            self.torres[10].hit()
+                        if self.subdito[17].health > 0:
+                            self.torres[10].hit()
+                        for vil in self.villano:
+                            if vil.linea == "bot" and vil.health > 0:
+                                self.torres[10].hit()
                         self.peleaBot = 0
                     elif self.torre_bot_2_izquierda:
-                        self.torres[11].hit()
+                        if self.subdito[15].health > 0:
+                            self.torres[11].hit()
+                        if self.subdito[16].health > 0:
+                            self.torres[11].hit()
+                        if self.subdito[17].health > 0:
+                            self.torres[11].hit()
+                        for vil in self.villano:
+                            if vil.linea == "bot" and vil.health > 0:
+                                self.torres[11].hit()
+                        self.peleaBot = 0
+                    elif not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
+                        if self.subdito[15].health > 0:
+                            self.bases[0].hit()
+                        if self.subdito[16].health > 0:
+                            self.bases[0].hit()
+                        if self.subdito[17].health > 0:
+                            self.bases[0].hit()
+                        for vil in self.villano:
+                            if vil.linea == "bot" and vil.health > 0:
+                                self.bases[0].hit()
                         self.peleaBot = 0
 
         def ia(self):
