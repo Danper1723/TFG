@@ -7,7 +7,6 @@ from heroes.Cicatrices.accion_cicatrices import Accion_cicatrices
 
 class Img_cicatrices(Accion_cicatrices):
 
-
     imgs = []
     imgs2 = []
     imgs3 = []

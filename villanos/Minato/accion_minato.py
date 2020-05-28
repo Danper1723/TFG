@@ -40,10 +40,10 @@ class Accion_minato:
         self.linea = "top"
         self.cont = 0
 
-        self.dano = 30
-        self.health = 100  # Barra de vida
-        self.max_health = 100  # Barra de vida
-        self.armadura = 12
+        self.dano = 75
+        self.health = 400  # Barra de vida
+        self.max_health = 400  # Barra de vida
+        self.armadura = 5
 
     def draw(self, win):
         
@@ -649,7 +649,7 @@ class Accion_minato:
         else:
             self.estado = True
             self.contador_animacion = 0
-            self.health = 100  # Barra de vida
+            self.health = 400  # Barra de vida
             self.x = self.path[0][0]
             self.y = self.path[0][1]
             self.dis = 0

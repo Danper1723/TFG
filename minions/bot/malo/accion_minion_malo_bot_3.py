@@ -11,8 +11,8 @@ class Accion_minion_malo_bot_3:
         self.width = 64
         self.height = 64
         self.contador_animacion = 0
-        self.health = 100  # Barra de vida
-        self.max_health = 100  # Barra de vida
+        self.health = 200  # Barra de vida
+        self.max_health = 200  # Barra de vida
         self.vel = 3
         self.path = [(1400, 289), (1400, 292), (1400, 295), (1400, 298), (1400, 301), (1400, 304), (1400, 307),
                      (1400, 310), (1400, 313), (1400, 316), (1400, 319), (1400, 322), (1400, 325), (1400, 328),
@@ -197,6 +197,7 @@ class Accion_minion_malo_bot_3:
             else:
                 win.blit(self.img, (10000, 10000))
                 self.health = 0
+                self.path_pos = 0
 
 
                 # if
@@ -225,33 +226,34 @@ class Accion_minion_malo_bot_3:
         :return: NADA
         """
         # SELECCIONAR EL PATH SEGUN EL ESTADO DE LA PARTIDA
-        if self.torre_bot_1_derecha and self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 2V")
-            self.path = self.path2v
-        elif self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
-            print("FASE 3V")
-            self.path = self.path3v
-        elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
-            print("FASE 3V")
-            self.path = self.path3v
-        elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 2D")
-            self.path = self.path2d
-        elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 3D")
-            self.path = self.path3d
-        elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
-            print("FASE 3D")
-            self.path = self.path3d
+        if self.health > 0:
+            if self.torre_bot_1_derecha and self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 2V")
+                self.path = self.path2v
+            elif self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
+                print("FASE 3V")
+                self.path = self.path3v
+            elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and not self.torre_bot_2_izquierda:
+                print("FASE 3V")
+                self.path = self.path3v
+            elif not self.torre_bot_1_derecha and self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 2D")
+                self.path = self.path2d
+            elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 3D")
+                self.path = self.path3d
+            elif not self.torre_bot_1_derecha and not self.torre_bot_2_derecha and not self.torre_bot_1_izquierda and self.torre_bot_2_izquierda:
+                print("FASE 3D")
+                self.path = self.path3d
 
         #TODA ESTA MIERDA ES PARA CALCULAR EL MOVIMIENTO ENTRE PUNTOS MEDIANTE EL TEOREMA DE PITAGORAS(VECTORES)
         if self.health <= 0:
@@ -324,7 +326,7 @@ class Accion_minion_malo_bot_3:
         else:
             self.estado = True
             self.contador_animacion = 0
-            self.health = 100  # Barra de vida
+            self.health = 200  # Barra de vida
             self.x = self.path[0][0]
             self.y = self.path[0][1]
             self.dis = 0

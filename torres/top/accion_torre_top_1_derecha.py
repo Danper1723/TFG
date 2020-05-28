@@ -33,7 +33,7 @@ class Accion_torre_top_1_derecha:
         :return: BOOLEAN
         """
 
-        self.health -= 5
+        self.health -= 1
         #self.health -= self.health
 
         if self.health <= 0:
@@ -42,3 +42,4 @@ class Accion_torre_top_1_derecha:
             cursor.execute('UPDATE torres SET estado = 0 WHERE nombre = "torre_top_1_derecha"')
             conexion.commit()
             conexion.close()
+            self.health = 0

@@ -42,9 +42,9 @@ class Accion_robot:
         self.cont = 0
 
         self.dano = 30
-        self.health = 100  # Barra de vida
-        self.max_health = 100  # Barra de vida
-        self.armadura = 12
+        self.health = 750  # Barra de vida
+        self.max_health = 750  # Barra de vida
+        self.armadura = 20
 
     def draw(self, win):
         
@@ -640,7 +640,7 @@ class Accion_robot:
         else:
             self.estado = True
             self.contador_animacion = 0
-            self.health = 100  # Barra de vida
+            self.health = 750  # Barra de vida
             self.x = self.path[0][0]
             self.y = self.path[0][1]
             self.dis = 0

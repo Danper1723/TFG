@@ -40,10 +40,10 @@ class Accion_sombrero:
         self.linea = "top"
         self.cont = 0
 
-        self.dano = 30
-        self.health = 100  # Barra de vida
-        self.max_health = 100  # Barra de vida
-        self.armadura = 12
+        self.dano = 35
+        self.health = 650  # Barra de vida
+        self.max_health = 650  # Barra de vida
+        self.armadura = 15
 
     def draw(self, win):
         
@@ -649,7 +649,7 @@ class Accion_sombrero:
         else:
             self.estado = True
             self.contador_animacion = 0
-            self.health = 100  # Barra de vida
+            self.health = 650  # Barra de vida
             self.x = self.path[0][0]
             self.y = self.path[0][1]
             self.dis = 0

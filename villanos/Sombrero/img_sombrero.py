@@ -23,4 +23,4 @@ class Img_sombrero(Accion_sombrero):
 
     def __init__(self):
         super().__init__()
-        self.id = "Minato"
+        self.id = "Sombrero"

@@ -10,8 +10,8 @@ class Accion_minion_bueno_top_3:
         self.width = 64
         self.height = 64
         self.contador_animacion = 0
-        self.health = 100  # Barra de vida
-        self.max_health = 100  # Barra de vida
+        self.health = 200  # Barra de vida
+        self.max_health = 200  # Barra de vida
         self.vel = 3
         self.path = [(535,720),(535,717),(535,714),(535,711),(535,708),(535,705),(535,702),(535,699),(535,696),(535,693),(535,690),(535,687),(535,684),(535,681),(535,678),(535,675),(535,672),(535,669),(535,666),(535,663),(535,660),(535,657),(535,654),(535,651),(535,648),(535,645),(535,642),(535,639),(535,636),(535,633),(535,630),(535,627),(535,624),(535,621),(535,618),(535,615),(535,612),(535,609),(535,606),(535,603),(535,600),(535,597),(535,594),(535,591),(535,588),(535,585),(535,582),(535,579),(535,576),(535,573),(535,570),(535,567),(535,564),(535,561),(535,558),(535,555),(535,552),(535,549),(535,546),(535,543),(535,540),(535,537),(535,534),(535,531),(535,528),(535,525),(535,522),(535,519),(535,516),(535,513),(535,510),(535,507),(535,504),(535,501),(535,498),(535,495),(535,492),(535,489),(535,486),(535,483),(535,480),(535,477),(535,474),(535,471),(535,468),(535,465),(535,462),(535,459),(535,456),(535,453),(535,450),(535,447),(535,444),(535,441),(535,438),(535,435),(535,432),(535,429),(535,426),(535,423),(535,420),(535,417),(535,414),(535,411),(535,408),(535,405),(535,402),(535,399),(535,396),(535,393),(535,390),(535,387),(535,384),(535,381),(535,378),(535,375),(535,372),(535,369),(535,366),(535,363),(535,360),(535,357),(535,354),(535,351),(535,348),(535,345),(535,342),(535,339),(535,336),(535,333),(535,330),(535,327),(535,324),(535,321),(535,318),(535,318),(535,318),(535,318),(535,318),(535,318),(535,318),(535,318),(535,318),(535,318),(538,315),(541,312),(544,309),(547,306),(550,303),(553,300),(556,297),(559,294)]
         
@@ -170,12 +170,14 @@ class Accion_minion_bueno_top_3:
                 win.blit(self.img, (self.x, self.y))
             else:
                 win.blit(self.img, (10000, 10000))
-
+                self.health = 0
+                self.path_pos = 0
                 # if
 
             self.mover()
             if self.health > 0:
                 self.draw_health_bar(win)
+
 
     def colision(self, X, Y):
         """
@@ -197,33 +199,34 @@ class Accion_minion_bueno_top_3:
         :return: NADA
         """
         # SELECCIONAR EL PATH SEGUN EL ESTADO DE LA PARTIDA
-        if self.torre_top_1_derecha and self.torre_top_2_derecha and self.torre_top_1_izquierda and self.torre_top_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif not self.torre_top_1_derecha and self.torre_top_2_derecha and not self.torre_top_1_izquierda and self.torre_top_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif not self.torre_top_1_derecha and not self.torre_top_2_derecha and not self.torre_top_1_izquierda and not self.torre_top_2_izquierda:
-            print("FASE 1")
-            self.path = self.path1
-        elif self.torre_top_1_derecha and self.torre_top_2_derecha and not self.torre_top_1_izquierda and self.torre_top_2_izquierda:
-            print("FASE 2V")
-            self.path = self.path2d
-        elif self.torre_top_1_derecha and self.torre_top_2_derecha and not self.torre_top_1_izquierda and not self.torre_top_2_izquierda:
-            print("FASE 3V")
-            self.path = self.path3d
-        elif not self.torre_top_1_derecha and self.torre_top_2_derecha and not self.torre_top_1_izquierda and not self.torre_top_2_izquierda:
-            print("FASE 3V")
-            self.path = self.path3d
-        elif not self.torre_top_1_derecha and self.torre_top_2_derecha and self.torre_top_1_izquierda and self.torre_top_2_izquierda:
-            print("FASE 2D")
-            self.path = self.path2v
-        elif not self.torre_top_1_derecha and not self.torre_top_2_derecha and self.torre_top_1_izquierda and self.torre_top_2_izquierda:
-            print("FASE 3D")
-            self.path = self.path3v
-        elif not self.torre_top_1_derecha and not self.torre_top_2_derecha and not self.torre_top_1_izquierda and self.torre_top_2_izquierda:
-            print("FASE 3D")
-            self.path = self.path3v
+        if self.health > 0:
+            if self.torre_top_1_derecha and self.torre_top_2_derecha and self.torre_top_1_izquierda and self.torre_top_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif not self.torre_top_1_derecha and self.torre_top_2_derecha and not self.torre_top_1_izquierda and self.torre_top_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif not self.torre_top_1_derecha and not self.torre_top_2_derecha and not self.torre_top_1_izquierda and not self.torre_top_2_izquierda:
+                print("FASE 1")
+                self.path = self.path1
+            elif self.torre_top_1_derecha and self.torre_top_2_derecha and not self.torre_top_1_izquierda and self.torre_top_2_izquierda:
+                print("FASE 2V")
+                self.path = self.path2d
+            elif self.torre_top_1_derecha and self.torre_top_2_derecha and not self.torre_top_1_izquierda and not self.torre_top_2_izquierda:
+                print("FASE 3V")
+                self.path = self.path3d
+            elif not self.torre_top_1_derecha and self.torre_top_2_derecha and not self.torre_top_1_izquierda and not self.torre_top_2_izquierda:
+                print("FASE 3V")
+                self.path = self.path3d
+            elif not self.torre_top_1_derecha and self.torre_top_2_derecha and self.torre_top_1_izquierda and self.torre_top_2_izquierda:
+                print("FASE 2D")
+                self.path = self.path2v
+            elif not self.torre_top_1_derecha and not self.torre_top_2_derecha and self.torre_top_1_izquierda and self.torre_top_2_izquierda:
+                print("FASE 3D")
+                self.path = self.path3v
+            elif not self.torre_top_1_derecha and not self.torre_top_2_derecha and not self.torre_top_1_izquierda and self.torre_top_2_izquierda:
+                print("FASE 3D")
+                self.path = self.path3v
         #TODA ESTA MIERDA ES PARA CALCULAR EL MOVIMIENTO ENTRE PUNTOS MEDIANTE EL TEOREMA DE PITAGORAS(VECTORES)
         if self.health <= 0:
             self.path_pos = 0
@@ -295,7 +298,7 @@ class Accion_minion_bueno_top_3:
         else:
             self.estado = True
             self.contador_animacion = 0
-            self.health = 100  # Barra de vida
+            self.health = 200  # Barra de vida
             self.x = self.path[0][0]
             self.y = self.path[0][1]
             self.dis = 0
