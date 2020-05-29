@@ -32,7 +32,7 @@ class Accion_base_buenos:
         :return: BOOLEAN
         """
 
-        self.health -= 1
+        self.health -= 5
         #self.health -= self.health
         print("Se pega a base buenos")
         if self.health <= 0:

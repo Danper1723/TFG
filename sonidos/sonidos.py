@@ -11,7 +11,7 @@ class Sonidos:
         pygame.mixer.init()
         print("Musica ON!")
         self.fondo = pygame.mixer.music.load('../sonidos/-backgroundSound.mp3')
-        pygame.mixer.music.set_volume(0.01)
+        pygame.mixer.music.set_volume(0.03)
         pygame.mixer.music.play(-1)
         # --------------------------------------------------------
 

@@ -100,6 +100,10 @@ global cont
 cont = 0
 global validador
 validador = 1
+global i
+i = 0
+global x
+x = random.choice(range(0, 3))
 
 
 class InputBox:
@@ -160,7 +164,6 @@ class InputBox:
         # Blit the rect.
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
-
 def cargar_imagen(nombre, transparente=False):
     try:
         imagen = pygame.image.load(nombre)
@@ -172,7 +175,6 @@ def cargar_imagen(nombre, transparente=False):
         color = imagen.get_at((0, 0))
         imagen.set_colorkey(color, RLEACCEL)
     return imagen
-
 
 def main():
     global nombre
@@ -463,6 +465,10 @@ def game():
             self.comPeleaMid = True
             self.comPeleaBot = True
 
+            self.compTop = False
+            self.compMid = False
+            self.compBot = False
+
         def run(self):
             global click
 
@@ -513,6 +519,10 @@ def game():
                             self.cont_mid = 0
                             self.cont_bot = 0
                             self.reset_cont = 0
+
+                        self.compTop = False
+                        self.compMid = False
+                        self.compBot = False
 
                         self.comprobacion_ia = True
                         segundosRonda = 20
@@ -713,7 +723,29 @@ def game():
 
                 self.escribir_Vida_Bases()
 
-                pygame.display.update()#Este es el update general NO SE TOCA
+                self.colocar_Jugadores()
+
+                self.colocar_IA()
+
+                # Pantalla de VICTORIA/DERROTA
+                if self.bases[0].health > 0 and self.bases[1].health <= 0:
+                    imagenFinal = pygame.image.load(os.path.join("..", "imagenes", "victoria.png"))
+                    self.win.blit(imagenFinal, (0, 0))
+                    self.b.backgroundStop()
+                    pygame.display.update()  # Este es el update general NO SE TOCA
+                    time.sleep(3)
+                    pygame.quit()
+                    sys.exit()
+                elif self.bases[1].health > 0 and self.bases[0].health <= 0:
+                    imagenFinal = pygame.image.load(os.path.join("..", "imagenes", "derrota.png"))
+                    self.win.blit(imagenFinal, (0, 0))
+                    self.b.backgroundStop()
+                    pygame.display.update()  # Este es el update general NO SE TOCA
+                    time.sleep(3)
+                    pygame.quit()
+                    sys.exit()
+                else:
+                    pygame.display.update()  # Este es el update general NO SE TOCA
 
                 # ------
                 self.draw()
@@ -721,6 +753,7 @@ def game():
 
         def draw(self):
             global click
+            global segundosRonda
 
             self.win.blit(self.background, (0, 0))
 
@@ -743,6 +776,13 @@ def game():
 
             # PELEAS BOT
             self.peleas_Bot()
+
+            if self.compTop and self.compMid and self.compBot:
+                if self.subdito[0].estado:
+                    segundosRonda = 1
+                    self.compTop = False
+                    self.compMid = False
+                    self.compBot = False
 
             for min in self.subdito:
                 min.draw(self.win)
@@ -879,8 +919,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_mid = 1
+                                self.bCalColMid = False
                         elif self.heroe[0].posicion == 2:
                             self.cont_mid = 1
+                            self.bCalColMid = False
                         if self.heroe[0].linea == "bot":
                             if self.heroe[0].posicion == 1:
                                 for her in self.heroe:
@@ -888,14 +930,21 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_bot = 1
+                                self.bCalColBot = False
                         elif self.heroe[0].posicion == 2:
                             self.cont_bot = 1
+                            self.bCalColBot = False
                         # ----------------
                         self.cont_top += 1
                         self.heroe[0].posicion = self.cont_top
                         # self.heroe[0].posicion = 2#
                         self.heroe[0].linea = "top"
                         self.bCalColTop = True
+
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             if not self.bCalColMid:
                 if self.rectCal.colliderect(self.rectColMid):  # Colision con rect en mid
@@ -908,8 +957,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_top = 1
+                                self.bCalColTop = False
                         elif self.heroe[0].posicion == 2:
                             self.cont_top = 1
+                            self.bCalColTop = False
                         if self.heroe[0].linea == "bot":
                             if self.heroe[0].posicion == 1:
                                 for her in self.heroe:
@@ -917,14 +968,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_bot = 1
+                                self.bCalColBot = False
                         elif self.heroe[0].posicion == 2:
                             self.cont_bot = 1
+                            self.bCalColBot = False
                         # ----------------
                         self.cont_mid += 1
                         self.heroe[0].posicion = self.cont_mid
                         # self.heroe[0].posicion = 2#
                         self.heroe[0].linea = "mid"
                         self.bCalColMid = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             if not self.bCalColBot:
                 if self.rectCal.colliderect(self.rectColBot):  # Colision con rect en bot
@@ -937,8 +994,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_top = 1
+                                self.bCalColTop = False
                         elif self.heroe[0].posicion == 2:
                             self.cont_top = 1
+                            self.bCalColTop = False
                         if self.heroe[0].linea == "mid":
                             if self.heroe[0].posicion == 1:
                                 for her in self.heroe:
@@ -946,14 +1005,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_mid = 1
+                                self.bCalColMid = False
                         elif self.heroe[0].posicion == 2:
                             self.cont_mid = 1
+                            self.bCalColMid = False
                         # ----------------
                         self.cont_bot += 1
                         self.heroe[0].posicion = self.cont_bot
                         # self.heroe[0].posicion = 2#
                         self.heroe[0].linea = "bot"
                         self.bCalColBot = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             # Colisiones de Asesina
             if not self.bAseColTop:
@@ -968,8 +1033,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_mid = 1
+                                self.bAseColMid = False
                         elif self.heroe[1].posicion == 2:
                             self.cont_mid = 1
+                            self.bAseColMid = False
                         if self.heroe[1].linea == "bot":
                             if self.heroe[1].posicion == 1:
                                 for her in self.heroe:
@@ -977,14 +1044,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_bot = 1
+                                self.bAseColBot = False
                         elif self.heroe[1].posicion == 2:
                             self.cont_bot = 1
+                            self.bAseColBot = False
                         # ----------------
                         self.cont_top += 1
                         self.heroe[1].posicion = self.cont_top
                         # self.heroe[1].posicion = 2#
                         self.heroe[1].linea = "top"
                         self.bAseColTop = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             if not self.bAseColMid:
                 if self.rectAse.colliderect(self.rectColMid):  # Colision con rect en mid
@@ -997,8 +1070,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_top = 1
+                                self.bAseColTop = False
                         elif self.heroe[1].posicion == 2:
                             self.cont_top = 1
+                            self.bAseColTop = False
                         if self.heroe[1].linea == "bot":
                             if self.heroe[1].posicion == 1:
                                 for her in self.heroe:
@@ -1006,14 +1081,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_bot = 1
+                                self.bAseColBot = False
                         elif self.heroe[1].posicion == 2:
                             self.cont_bot = 1
+                            self.bAseColBot = False
                         # ----------------
                         self.cont_mid += 1
                         self.heroe[1].posicion = self.cont_mid
                         # self.heroe[0].posicion = 2#
                         self.heroe[1].linea = "mid"
                         self.bAseColMid = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             if not self.bAseColBot:
                 if self.rectAse.colliderect(self.rectColBot):  # Colision con rect en bot
@@ -1026,8 +1107,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_top = 1
+                                self.bAseColTop = False
                         elif self.heroe[1].posicion == 2:
                             self.cont_top = 1
+                            self.bAseColTop = False
                         if self.heroe[1].linea == "mid":
                             if self.heroe[1].posicion == 1:
                                 for her in self.heroe:
@@ -1035,14 +1118,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_mid = 1
+                                self.bAseColMid = False
                         elif self.heroe[1].posicion == 2:
                             self.cont_mid = 1
+                            self.bAseColMid = False
                         # ----------------
                         self.cont_bot += 1
                         self.heroe[1].posicion = self.cont_bot
                         # self.heroe[0].posicion = 2#
                         self.heroe[1].linea = "bot"
                         self.bAseColBot = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             # Colisiones de Cicatrices
             if not self.bCicColTop:
@@ -1056,8 +1145,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_mid = 1
+                                self.bCicColMid = False
                         elif self.heroe[2].posicion == 2:
                             self.cont_mid = 1
+                            self.bCicColMid = False
                         if self.heroe[2].linea == "bot":
                             if self.heroe[2].posicion == 1:
                                 for her in self.heroe:
@@ -1065,14 +1156,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_bot = 1
+                                self.bCicColBot = False
                         elif self.heroe[2].posicion == 2:
                             self.cont_bot = 1
+                            self.bCicColBot = False
                         # ----------------
                         self.cont_top += 1
                         self.heroe[2].posicion = self.cont_top
                         # self.heroe[0].posicion = 2#
                         self.heroe[2].linea = "top"
                         self.bCicColTop = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             if not self.bCicColMid:
                 if self.rectCic.colliderect(self.rectColMid):  # Colision con rect en mid
@@ -1085,8 +1182,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_top = 1
+                                self.bCicColTop = False
                         elif self.heroe[2].posicion == 2:
                             self.cont_top = 1
+                            self.bCicColTop = False
                         if self.heroe[2].linea == "bot":
                             if self.heroe[2].posicion == 1:
                                 for her in self.heroe:
@@ -1094,14 +1193,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_bot = 1
+                                self.bCicColBot = False
                         elif self.heroe[2].posicion == 2:
                             self.cont_bot = 1
+                            self.bCicColBot = False
                         # ----------------
                         self.cont_mid += 1
                         self.heroe[2].posicion = self.cont_mid
                         # self.heroe[0].posicion = 2#
                         self.heroe[2].linea = "mid"
                         self.bCicColMid = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             if not self.bCicColBot:
                 if self.rectCic.colliderect(self.rectColBot):  # Colision con rect en bot
@@ -1114,8 +1219,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_top = 1
+                                self.bCicColTop = False
                         elif self.heroe[2].posicion == 2:
                             self.cont_top = 1
+                            self.bCicColTop = False
                         if self.heroe[2].linea == "mid":
                             if self.heroe[1].posicion == 1:
                                 for her in self.heroe:
@@ -1123,14 +1230,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_mid = 1
+                                self.bCicColMid = False
                         elif self.heroe[1].posicion == 2:
                             self.cont_mid = 1
+                            self.bCicColMid = False
                         # ----------------
                         self.cont_bot += 1
                         self.heroe[2].posicion = self.cont_bot
                         # self.heroe[0].posicion = 2#
                         self.heroe[2].linea = "bot"
                         self.bCicColBot = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             # Colisiones de Robot
             if not self.bRobColTop:
@@ -1144,8 +1257,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_mid = 1
+                                self.bRobColMid = False
                         elif self.heroe[3].posicion == 2:
                             self.cont_mid = 1
+                            self.bRobColMid = False
                         if self.heroe[3].linea == "bot":
                             if self.heroe[3].posicion == 1:
                                 for her in self.heroe:
@@ -1153,14 +1268,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_bot = 1
+                                self.bRobColBot = False
                         elif self.heroe[3].posicion == 2:
                             self.cont_bot = 1
+                            self.bRobColBot = False
                         # ----------------
                         self.cont_top += 1
                         self.heroe[3].posicion = self.cont_top
                         # self.heroe[0].posicion = 2#
                         self.heroe[3].linea = "top"
                         self.bRobColTop = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             if not self.bRobColMid:
                 if self.rectRob.colliderect(self.rectColMid):  # Colision con rect en mid
@@ -1173,8 +1294,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_top = 1
+                                self.bRobColTop = False
                         elif self.heroe[3].posicion == 2:
                             self.cont_top = 1
+                            self.bRobColTop = False
                         if self.heroe[3].linea == "bot":
                             if self.heroe[3].posicion == 1:
                                 for her in self.heroe:
@@ -1182,14 +1305,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_bot = 1
+                                self.bRobColBot = False
                         elif self.heroe[3].posicion == 2:
                             self.cont_bot = 1
+                            self.bRobColBot = False
                         # ----------------
                         self.cont_mid += 1
                         self.heroe[3].posicion = self.cont_mid
                         # self.heroe[0].posicion = 2#
                         self.heroe[3].linea = "mid"
                         self.bRobColMid = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             if not self.bRobColBot:
                 if self.rectRob.colliderect(self.rectColBot):  # Colision con rect en bot
@@ -1202,8 +1331,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_top = 1
+                                self.bRobColTop = False
                         elif self.heroe[3].posicion == 2:
                             self.cont_top = 1
+                            self.bRobColTop = False
                         if self.heroe[3].linea == "mid":
                             if self.heroe[3].posicion == 1:
                                 for her in self.heroe:
@@ -1211,14 +1342,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_mid = 1
+                                self.bRobColMid = False
                         elif self.heroe[3].posicion == 2:
                             self.cont_mid = 1
+                            self.bRobColMid = False
                         # ----------------
                         self.cont_bot += 1
                         self.heroe[3].posicion = self.cont_bot
                         # self.heroe[0].posicion = 2#
                         self.heroe[3].linea = "bot"
                         self.bRobColBot = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             # Colisiones de Elfa
             if not self.bElfColTop:
@@ -1232,8 +1369,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_mid = 1
+                                self.bElfColMid = False
                         elif self.heroe[4].posicion == 2:
                             self.cont_mid = 1
+                            self.bElfColMid = False
                         if self.heroe[4].linea == "bot":
                             if self.heroe[4].posicion == 1:
                                 for her in self.heroe:
@@ -1241,14 +1380,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_bot = 1
+                                self.bElfColBot = False
                         elif self.heroe[4].posicion == 2:
-                            self.cont_bot = 1
+                            self.cont_boBot = 1
+                            self.bElfColBot = False
                         # ----------------
                         self.cont_top += 1
                         self.heroe[4].posicion = self.cont_top
                         # self.heroe[0].posicion = 2#
                         self.heroe[4].linea = "top"
                         self.bElfColTop = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             if not self.bElfColMid:
                 if self.rectElf.colliderect(self.rectColMid):  # Colision con rect en mid
@@ -1261,8 +1406,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_top = 1
+                                self.bElfColTop = False
                         elif self.heroe[4].posicion == 2:
                             self.cont_top = 1
+                            self.bElfColTop = False
                         if self.heroe[4].linea == "bot":
                             if self.heroe[4].posicion == 1:
                                 for her in self.heroe:
@@ -1270,14 +1417,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_bot = 1
+                                self.bElfColBot = False
                         elif self.heroe[4].posicion == 2:
                             self.cont_bot = 1
+                            self.bElfColBot = False
                         # ----------------
                         self.cont_mid += 1
                         self.heroe[4].posicion = self.cont_mid
                         # self.heroe[0].posicion = 2#
                         self.heroe[4].linea = "mid"
                         self.bElfColMid = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
 
             if not self.bElfColBot:
                 if self.rectElf.colliderect(self.rectColBot):  # Colision con rect en bot
@@ -1290,8 +1443,10 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_top = 1
+                                self.bElfColTop = False
                         elif self.heroe[4].posicion == 2:
                             self.cont_top = 1
+                            self.bElfColTop = False
                         if self.heroe[4].linea == "mid":
                             if self.heroe[4].posicion == 1:
                                 for her in self.heroe:
@@ -1299,14 +1454,20 @@ def game():
                                         if her.posicion == 2:
                                             her.posicion = 1
                                 self.cont_mid = 1
+                                self.bElfColMid = False
                         elif self.heroe[4].posicion == 2:
                             self.cont_mid = 1
+                            self.bElfColMid = False
                         # ----------------
                         self.cont_bot += 1
                         self.heroe[4].posicion = self.cont_bot
                         # self.heroe[0].posicion = 2#
                         self.heroe[4].linea = "bot"
                         self.bElfColBot = True
+                    pygame.mixer.init()
+                    effect = pygame.mixer.Sound('../sonidos/colision_con_portal.wav')
+                    effect.set_volume(0.5)
+                    effect.play()
             # ----Se acaba mover heroes a las lineas
 
         def escribir_Tiempo(self):
@@ -1973,6 +2134,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                     (dano * self.villano[atacarA].armadura) / 100))
+                                        self.villano[atacarA].muerte()
                                         salir = False
 
                         for her in self.heroe:  # For turno heroes
@@ -1994,6 +2156,7 @@ def game():
                                             self.villano[atacarA].health -= her.dano - int((
                                                     (her.dano * self.villano[atacarA].armadura) / 100))
                                             print(her.id, "ataca a ", self.villano[atacarA].id, "haciendo", her.dano - int(((her.dano * self.villano[atacarA].armadura) / 100)))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                         # TURNO DE LOS MALOS
@@ -2028,6 +2191,8 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                     (dano * self.heroe[atacarA].armadura) / 100))
+
+                                        self.heroe[atacarA].muerte()
                                         salir = False
 
                         for vil in self.villano:  # For turno villanos
@@ -2050,6 +2215,7 @@ def game():
                                                     (vil.dano * self.heroe[atacarA].armadura) / 100))
                                             print(vil.id, "ataca a ", self.heroe[atacarA].id, "haciendo", vil.dano - int((
                                                     (vil.dano * self.heroe[atacarA].armadura) / 100)))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
             elif self.subdito[0].y == 597 and self.subdito[3].y == 470:
@@ -2091,6 +2257,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                     (dano * self.villano[atacarA].armadura) / 100))
+                                        self.villano[atacarA].muerte()
                                         salir = False
 
                         for her in self.heroe:  # For turno heroes
@@ -2111,6 +2278,9 @@ def game():
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "top":
                                             self.villano[atacarA].health -= her.dano - int((
                                                     (her.dano * self.villano[atacarA].armadura) / 100))
+                                            print(her.id, "ataca a ", self.villano[atacarA].id, "haciendo",
+                                                  her.dano - int(((her.dano * self.villano[atacarA].armadura) / 100)))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                         # TURNO DE LOS MALOS
@@ -2145,6 +2315,8 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                     (dano * self.heroe[atacarA].armadura) / 100))
+
+                                        self.heroe[atacarA].muerte()
                                         salir = False
 
                         for vil in self.villano:  # For turno villanos
@@ -2165,9 +2337,13 @@ def game():
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "top":
                                             self.heroe[atacarA].health -= vil.dano - int((
                                                     (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            print(vil.id, "ataca a ", self.heroe[atacarA].id, "haciendo",
+                                                  vil.dano - int((
+                                                          (vil.dano * self.heroe[atacarA].armadura) / 100)))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
-            elif self.subdito[0].y == 705 and self.subdito[3].y == 611:
+            elif self.subdito[0].y == 705 and self.subdito[3].y == 587:
                 # FASE 3V - Malos
                 # FASE 3D - Buenos
                 if self.peleaTop:
@@ -2206,6 +2382,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                     (dano * self.villano[atacarA].armadura) / 100))
+                                        self.villano[atacarA].muerte()
                                         salir = False
 
                         for her in self.heroe:  # For turno heroes
@@ -2226,6 +2403,9 @@ def game():
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "top":
                                             self.villano[atacarA].health -= her.dano - int((
                                                     (her.dano * self.villano[atacarA].armadura) / 100))
+                                            print(her.id, "ataca a ", self.villano[atacarA].id, "haciendo",
+                                                  her.dano - int(((her.dano * self.villano[atacarA].armadura) / 100)))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                         # TURNO DE LOS MALOS
@@ -2260,6 +2440,8 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                     (dano * self.heroe[atacarA].armadura) / 100))
+
+                                        self.heroe[atacarA].muerte()
                                         salir = False
 
                         for vil in self.villano:  # For turno villanos
@@ -2280,6 +2462,10 @@ def game():
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "top":
                                             self.heroe[atacarA].health -= vil.dano - int((
                                                     (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            print(vil.id, "ataca a ", self.heroe[atacarA].id, "haciendo",
+                                                  vil.dano - int((
+                                                          (vil.dano * self.heroe[atacarA].armadura) / 100)))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
             elif self.subdito[0].x == 886 and self.subdito[3].x == 1005:
@@ -2321,6 +2507,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                     (dano * self.villano[atacarA].armadura) / 100))
+                                        self.villano[atacarA].muerte()
                                         salir = False
 
                         for her in self.heroe:  # For turno heroes
@@ -2341,6 +2528,9 @@ def game():
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "top":
                                             self.villano[atacarA].health -= her.dano - int((
                                                     (her.dano * self.villano[atacarA].armadura) / 100))
+                                            print(her.id, "ataca a ", self.villano[atacarA].id, "haciendo",
+                                                  her.dano - int(((her.dano * self.villano[atacarA].armadura) / 100)))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                         # TURNO DE LOS MALOS
@@ -2375,6 +2565,8 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                     (dano * self.heroe[atacarA].armadura) / 100))
+
+                                        self.heroe[atacarA].muerte()
                                         salir = False
 
                         for vil in self.villano:  # For turno villanos
@@ -2395,6 +2587,10 @@ def game():
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "top":
                                             self.heroe[atacarA].health -= vil.dano - int((
                                                     (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            print(vil.id, "ataca a ", self.heroe[atacarA].id, "haciendo",
+                                                  vil.dano - int((
+                                                          (vil.dano * self.heroe[atacarA].armadura) / 100)))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
             elif self.subdito[0].x == 1057 and self.subdito[3].x == 1185:
@@ -2436,6 +2632,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                     (dano * self.villano[atacarA].armadura) / 100))
+                                        self.villano[atacarA].muerte()
                                         salir = False
 
                         for her in self.heroe:  # For turno heroes
@@ -2456,6 +2653,9 @@ def game():
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "top":
                                             self.villano[atacarA].health -= her.dano - int((
                                                     (her.dano * self.villano[atacarA].armadura) / 100))
+                                            print(her.id, "ataca a ", self.villano[atacarA].id, "haciendo",
+                                                  her.dano - int(((her.dano * self.villano[atacarA].armadura) / 100)))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                         # TURNO DE LOS MALOS
@@ -2490,6 +2690,8 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                     (dano * self.heroe[atacarA].armadura) / 100))
+
+                                        self.heroe[atacarA].muerte()
                                         salir = False
 
                         for vil in self.villano:  # For turno villanos
@@ -2510,6 +2712,10 @@ def game():
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "top":
                                             self.heroe[atacarA].health -= vil.dano - int((
                                                     (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            print(vil.id, "ataca a ", self.heroe[atacarA].id, "haciendo",
+                                                  vil.dano - int((
+                                                          (vil.dano * self.heroe[atacarA].armadura) / 100)))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
             sumaHerTop = 0
             for her in self.heroe:
@@ -2559,6 +2765,7 @@ def game():
                             if her.linea == "top" and her.health > 0:
                                 self.bases[1].hit()
                         self.peleaTop = 0
+                    self.compTop = True
                 elif self.buenosTop == 0 and self.malosTop > 0:
                     if self.torre_top_1_izquierda:
                         if self.subdito[3].health > 0:
@@ -2593,6 +2800,7 @@ def game():
                             if vil.linea == "top" and vil.health > 0:
                                 self.bases[0].hit()
                         self.peleaTop = 0
+                    self.compTop = True
 
         def peleas_Mid(self):
             if self.subdito[6].x == 921 and self.subdito[9].x == 952:
@@ -2633,6 +2841,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                     (dano * self.villano[atacarA].armadura) / 100))
+                                        self.villano[atacarA].muerte()
                                         salir = False
 
                         for her in self.heroe:  # For turno heroes
@@ -2653,6 +2862,7 @@ def game():
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
                                             self.villano[atacarA].health -= her.dano - int((
                                                         (her.dano * self.villano[atacarA].armadura) / 100))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                         # TURNO DE LOS MALOS
@@ -2687,6 +2897,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                     (dano * self.heroe[atacarA].armadura) / 100))
+                                        self.heroe[atacarA].muerte()
                                         salir = False
 
                         for vil in self.villano:  # For turno villanos
@@ -2706,6 +2917,7 @@ def game():
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
                                             self.heroe[atacarA].health -= vil.dano - int((
                                                         (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
             elif self.subdito[6].y == 655 and self.subdito[9].y == 559:
@@ -2748,6 +2960,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                     (dano * self.villano[atacarA].armadura) / 100))
+                                        self.villano[atacarA].muerte()
                                         salir = False
 
                         for her in self.heroe:  # For turno heroes
@@ -2769,6 +2982,7 @@ def game():
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
                                             self.villano[atacarA].health -= her.dano - int((
                                                     (her.dano * self.villano[atacarA].armadura) / 100))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                         # TURNO DE LOS MALOS
@@ -2803,6 +3017,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                     (dano * self.heroe[atacarA].armadura) / 100))
+                                        self.heroe[atacarA].muerte()
                                         salir = False
 
                         for vil in self.villano:  # For turno villanos
@@ -2823,9 +3038,10 @@ def game():
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
                                             self.heroe[atacarA].health -= vil.dano - int((
                                                     (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
-            elif self.subdito[6].y == 745 and self.subdito[9].y == 715:
+            elif self.subdito[6].y == 745 and self.subdito[9].y == 649:
                 # FASE 3V - Malos
                 # FASE 3D - Buenos
                 if self.peleaMid:
@@ -2865,6 +3081,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                     (dano * self.villano[atacarA].armadura) / 100))
+                                        self.villano[atacarA].muerte()
                                         salir = False
 
                         for her in self.heroe:  # For turno heroes
@@ -2886,6 +3103,7 @@ def game():
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
                                             self.villano[atacarA].health -= her.dano - int((
                                                     (her.dano * self.villano[atacarA].armadura) / 100))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                         # TURNO DE LOS MALOS
@@ -2920,6 +3138,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                     (dano * self.heroe[atacarA].armadura) / 100))
+                                        self.heroe[atacarA].muerte()
                                         salir = False
 
                         for vil in self.villano:  # For turno villanos
@@ -2940,6 +3159,7 @@ def game():
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
                                             self.heroe[atacarA].health -= vil.dano - int((
                                                     (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
             elif self.subdito[6].x == 1044 and self.subdito[9].x == 1135:
@@ -2982,6 +3202,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                     (dano * self.villano[atacarA].armadura) / 100))
+                                        self.villano[atacarA].muerte()
                                         salir = False
 
                         for her in self.heroe:  # For turno heroes
@@ -3003,6 +3224,7 @@ def game():
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
                                             self.villano[atacarA].health -= her.dano - int((
                                                     (her.dano * self.villano[atacarA].armadura) / 100))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                         # TURNO DE LOS MALOS
@@ -3037,6 +3259,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                     (dano * self.heroe[atacarA].armadura) / 100))
+                                        self.heroe[atacarA].muerte()
                                         salir = False
 
                         for vil in self.villano:  # For turno villanos
@@ -3057,6 +3280,7 @@ def game():
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
                                             self.heroe[atacarA].health -= vil.dano - int((
                                                     (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
             elif self.subdito[6].x == 1125 and self.subdito[9].x == 1219:
@@ -3099,6 +3323,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                     (dano * self.villano[atacarA].armadura) / 100))
+                                        self.villano[atacarA].muerte()
                                         salir = False
 
                         for her in self.heroe:  # For turno heroes
@@ -3120,6 +3345,7 @@ def game():
                                         if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "mid":
                                             self.villano[atacarA].health -= her.dano - int((
                                                     (her.dano * self.villano[atacarA].armadura) / 100))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                         # TURNO DE LOS MALOS
@@ -3154,6 +3380,7 @@ def game():
                                             dano = random.choice(range(15, 19))
                                             self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                     (dano * self.heroe[atacarA].armadura) / 100))
+                                        self.heroe[atacarA].muerte()
                                         salir = False
 
                         for vil in self.villano:  # For turno villanos
@@ -3174,6 +3401,7 @@ def game():
                                         if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "mid":
                                             self.heroe[atacarA].health -= vil.dano - int((
                                                     (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
             sumaHerMid = 0
@@ -3224,6 +3452,7 @@ def game():
                             if her.linea == "mid" and her.health > 0:
                                 self.bases[1].hit()
                         self.peleaMid = 0
+                    self.compMid = True
                 elif self.buenosMid == 0 and self.malosMid > 0:
                     if self.torre_mid_1_izquierda:
                         if self.subdito[9].health > 0:
@@ -3237,16 +3466,15 @@ def game():
                                 self.torres[6].hit()
                         self.peleaMid = 0
                     elif self.torre_mid_2_izquierda:
-                        if self.torre_mid_1_izquierda:
-                            if self.subdito[9].health > 0:
+                        if self.subdito[9].health > 0:
+                            self.torres[7].hit()
+                        if self.subdito[10].health > 0:
+                            self.torres[7].hit()
+                        if self.subdito[11].health > 0:
+                            self.torres[7].hit()
+                        for vil in self.villano:
+                            if vil.linea == "mid" and vil.health > 0:
                                 self.torres[7].hit()
-                            if self.subdito[10].health > 0:
-                                self.torres[7].hit()
-                            if self.subdito[11].health > 0:
-                                self.torres[7].hit()
-                            for vil in self.villano:
-                                if vil.linea == "mid" and vil.health > 0:
-                                    self.torres[7].hit()
                         self.peleaMid = 0
                     elif not self.torre_mid_1_izquierda and not self.torre_mid_2_izquierda:
                         if self.subdito[9].health > 0:
@@ -3259,6 +3487,7 @@ def game():
                             if vil.linea == "mid" and vil.health > 0:
                                 self.bases[0].hit()
                         self.peleaMid = 0
+                    self.compMid = True
 
         def peleas_Bot(self):
             if self.subdito[12].x == 1246 and self.subdito[15].x == 1324:
@@ -3298,6 +3527,7 @@ def game():
                                                 dano = random.choice(range(15, 19))
                                                 self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                         (dano * self.villano[atacarA].armadura) / 100))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                             for her in self.heroe:  # For turno heroes
@@ -3317,6 +3547,7 @@ def game():
                                             if self.villano[atacarA].health > 0 and self.villano[atacarA].linea == "bot":
                                                 self.villano[atacarA].health -= her.dano - int((
                                                         (her.dano * self.villano[atacarA].armadura) / 100))
+                                                self.villano[atacarA].muerte()
                                                 salir = False
 
                             # TURNO DE LOS MALOS
@@ -3350,6 +3581,7 @@ def game():
                                                 dano = random.choice(range(15, 19))
                                                 self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                         (dano * self.heroe[atacarA].armadura) / 100))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
                             for vil in self.villano:  # For turno villanos
@@ -3369,6 +3601,7 @@ def game():
                                             if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
                                                 self.heroe[atacarA].health -= vil.dano - int((
                                                         (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                                self.heroe[atacarA].muerte()
                                                 salir = False
 
             elif self.subdito[12].x == 895 and self.subdito[15].x == 991:
@@ -3411,6 +3644,7 @@ def game():
                                                 dano = random.choice(range(15, 19))
                                                 self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                         (dano * self.villano[atacarA].armadura) / 100))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                             for her in self.heroe:  # For turno heroes
@@ -3432,6 +3666,7 @@ def game():
                                                 atacarA].linea == "bot":
                                                 self.villano[atacarA].health -= her.dano - int((
                                                         (her.dano * self.villano[atacarA].armadura) / 100))
+                                                self.villano[atacarA].muerte()
                                                 salir = False
 
                             # TURNO DE LOS MALOS
@@ -3466,6 +3701,7 @@ def game():
                                                 dano = random.choice(range(15, 19))
                                                 self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                         (dano * self.heroe[atacarA].armadura) / 100))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
                             for vil in self.villano:  # For turno villanos
@@ -3486,6 +3722,7 @@ def game():
                                             if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
                                                 self.heroe[atacarA].health -= vil.dano - int((
                                                         (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                                self.heroe[atacarA].muerte()
                                                 salir = False
 
             elif self.subdito[12].x == 685 and self.subdito[15].x == 796:
@@ -3528,6 +3765,7 @@ def game():
                                                 dano = random.choice(range(15, 19))
                                                 self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                         (dano * self.villano[atacarA].armadura) / 100))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                             for her in self.heroe:  # For turno heroes
@@ -3549,6 +3787,7 @@ def game():
                                                 atacarA].linea == "bot":
                                                 self.villano[atacarA].health -= her.dano - int((
                                                         (her.dano * self.villano[atacarA].armadura) / 100))
+                                                self.villano[atacarA].muerte()
                                                 salir = False
 
                             # TURNO DE LOS MALOS
@@ -3583,6 +3822,7 @@ def game():
                                                 dano = random.choice(range(15, 19))
                                                 self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                         (dano * self.heroe[atacarA].armadura) / 100))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
                             for vil in self.villano:  # For turno villanos
@@ -3603,6 +3843,7 @@ def game():
                                             if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
                                                 self.heroe[atacarA].health -= vil.dano - int((
                                                         (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                                self.heroe[atacarA].muerte()
                                                 salir = False
 
             elif self.subdito[12].y == 602 and self.subdito[15].y == 484:
@@ -3645,6 +3886,7 @@ def game():
                                                 dano = random.choice(range(15, 19))
                                                 self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                         (dano * self.villano[atacarA].armadura) / 100))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                             for her in self.heroe:  # For turno heroes
@@ -3666,6 +3908,7 @@ def game():
                                                 atacarA].linea == "bot":
                                                 self.villano[atacarA].health -= her.dano - int((
                                                         (her.dano * self.villano[atacarA].armadura) / 100))
+                                                self.villano[atacarA].muerte()
                                                 salir = False
 
                             # TURNO DE LOS MALOS
@@ -3700,6 +3943,7 @@ def game():
                                                 dano = random.choice(range(15, 19))
                                                 self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                         (dano * self.heroe[atacarA].armadura) / 100))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
                             for vil in self.villano:  # For turno villanos
@@ -3720,6 +3964,7 @@ def game():
                                             if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
                                                 self.heroe[atacarA].health -= vil.dano - int((
                                                         (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                                self.heroe[atacarA].muerte()
                                                 salir = False
 
             elif self.subdito[12].y == 431 and self.subdito[15].y == 304:
@@ -3762,6 +4007,7 @@ def game():
                                                 dano = random.choice(range(15, 19))
                                                 self.villano[atacarA].health = self.villano[atacarA].health - int((
                                                         (dano * self.villano[atacarA].armadura) / 100))
+                                            self.villano[atacarA].muerte()
                                             salir = False
 
                             for her in self.heroe:  # For turno heroes
@@ -3783,6 +4029,7 @@ def game():
                                                 atacarA].linea == "bot":
                                                 self.villano[atacarA].health -= her.dano - int((
                                                         (her.dano * self.villano[atacarA].armadura) / 100))
+                                                self.villano[atacarA].muerte()
                                                 salir = False
 
                             # TURNO DE LOS MALOS
@@ -3817,6 +4064,7 @@ def game():
                                                 dano = random.choice(range(15, 19))
                                                 self.heroe[atacarA].health = self.heroe[atacarA].health - int((
                                                         (dano * self.heroe[atacarA].armadura) / 100))
+                                            self.heroe[atacarA].muerte()
                                             salir = False
 
                             for vil in self.villano:  # For turno villanos
@@ -3837,6 +4085,7 @@ def game():
                                             if self.heroe[atacarA].health > 0 and self.heroe[atacarA].linea == "bot":
                                                 self.heroe[atacarA].health -= vil.dano - int((
                                                         (vil.dano * self.heroe[atacarA].armadura) / 100))
+                                                self.heroe[atacarA].muerte()
                                                 salir = False
             sumaHerBot = 0
             for her in self.heroe:
@@ -3886,6 +4135,7 @@ def game():
                             if her.linea == "bot" and her.health > 0:
                                 self.bases[1].hit()
                         self.peleaBot = 0
+                    self.compBot = True
                 elif self.buenosBot == 0 and self.malosBot > 0:
                     if self.torre_bot_1_izquierda:
                         if self.subdito[15].health > 0:
@@ -3920,6 +4170,7 @@ def game():
                             if vil.linea == "bot" and vil.health > 0:
                                 self.bases[0].hit()
                         self.peleaBot = 0
+                    self.compBot = True
 
         def ia(self):
             contador_top = 0
@@ -3969,6 +4220,26 @@ def game():
 
                     if colocar:
                         break
+
+        def colocar_Jugadores(self):
+            global nombre
+            fuenteHealth = pygame.font.Font("../VT323-Regular.ttf", 65)  # Vida heroes
+
+            nombreJ = fuenteHealth.render(nombre, 0, (255, 255, 255))
+            self.win.blit(nombreJ, (85, 33))
+
+        def colocar_IA(self):
+
+            global nombreI
+            nombres_ia = ["Danper1723", "MegaMan500", "CobtCosmico"]
+
+            fuenteHealth = pygame.font.Font("../VT323-Regular.ttf", 65)  # Vida heroes
+
+            nombreI = fuenteHealth.render(nombres_ia[x], 0, (255, 255, 255))
+            self.win.blit(nombreI, (1540, 33))
+
+
+
 
     g = Game()
     g.run()
