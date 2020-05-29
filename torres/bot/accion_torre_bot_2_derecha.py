@@ -39,3 +39,7 @@ class Accion_torre_bot_2_derecha:
             conexion.commit()
             conexion.close()
             self.health = 0
+            pygame.mixer.init()
+            effect = pygame.mixer.Sound('../sonidos/sonidos_torres/muerte_torre.wav')
+            effect.set_volume(0.01)
+            effect.play()
