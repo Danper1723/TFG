@@ -4,6 +4,8 @@ import sqlite3
 import time  # Tiempo
 import threading  # Tiempo
 import random  # Numeros aleatorios
+import sys
+sys.setrecursionlimit(10000)
 
 from moviepy.editor import *
 
@@ -206,7 +208,7 @@ def main():
                     cursor.execute('INSERT INTO usuarios values("' + nombre + '", "' + correo + '")')
                     conexion.commit()
                     conexion.close()
-                game()  # CAMBIO - Meter dentro del if de arriba del SQL
+                    game()  # CAMBIO - Meter dentro del if de arriba del SQL
 
         if button_2.collidepoint((mx, my)):
             if click:
@@ -560,9 +562,9 @@ def game():
 
             pygame.font.init()
 
-            hiloRonda = threading.Thread(target=cronoRonda, args=())  # Hilo que controla el tiempo de ronda
+            hiloRonda = threading.Thread(target=cronoRonda, daemon=True,args=())  # Hilo que controla el tiempo de ronda
             hiloRonda.start()
-            hiloPartida = threading.Thread(target=cronoPartida, args=())  # Hilo que controla el tiempo de ronda
+            hiloPartida = threading.Thread(target=cronoPartida, daemon=True,args=())  # Hilo que controla el tiempo de ronda
             hiloPartida.start()
 
             self.cargar_Heroes()
