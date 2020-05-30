@@ -3,38 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="a8158525-63cb-49b9-bcc3-2dbd75664211" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bases/accion_base_buenos.py" beforeDir="false" afterPath="$PROJECT_DIR$/bases/accion_base_buenos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bases/accion_base_malos.py" beforeDir="false" afterPath="$PROJECT_DIR$/bases/accion_base_malos.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/codigo/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/codigo/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datos.db" beforeDir="false" afterPath="$PROJECT_DIR$/datos.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heroes/Asesina/accion_asesina.py" beforeDir="false" afterPath="$PROJECT_DIR$/heroes/Asesina/accion_asesina.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heroes/Cicatrices/accion_cicatrices.py" beforeDir="false" afterPath="$PROJECT_DIR$/heroes/Cicatrices/accion_cicatrices.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heroes/Elfa/accion_elfa.py" beforeDir="false" afterPath="$PROJECT_DIR$/heroes/Elfa/accion_elfa.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heroes/Mrcalabaza/accion_calabaza.py" beforeDir="false" afterPath="$PROJECT_DIR$/heroes/Mrcalabaza/accion_calabaza.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heroes/Robot/accion_robot.py" beforeDir="false" afterPath="$PROJECT_DIR$/heroes/Robot/accion_robot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minions/top/malo/accion_minion_malo_top_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/minions/top/malo/accion_minion_malo_top_1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minions/top/malo/accion_minion_malo_top_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/minions/top/malo/accion_minion_malo_top_2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minions/top/malo/accion_minion_malo_top_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/minions/top/malo/accion_minion_malo_top_3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sonidos/-backgroundSound.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/sonidos/-backgroundSound.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sonidos/sonidos.py" beforeDir="false" afterPath="$PROJECT_DIR$/sonidos/sonidos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/bot/accion_torre_bot_1_derecha.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/bot/accion_torre_bot_1_derecha.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/bot/accion_torre_bot_1_izquierda.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/bot/accion_torre_bot_1_izquierda.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/bot/accion_torre_bot_2_derecha.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/bot/accion_torre_bot_2_derecha.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/bot/accion_torre_bot_2_izquierda.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/bot/accion_torre_bot_2_izquierda.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/mid/accion_torre_mid_1_derecha.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/mid/accion_torre_mid_1_derecha.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/mid/accion_torre_mid_1_izquierda.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/mid/accion_torre_mid_1_izquierda.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/mid/accion_torre_mid_2_derecha.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/mid/accion_torre_mid_2_derecha.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/mid/accion_torre_mid_2_izquierda.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/mid/accion_torre_mid_2_izquierda.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/top/accion_torre_top_1_derecha.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/top/accion_torre_top_1_derecha.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/top/accion_torre_top_1_izquierda.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/top/accion_torre_top_1_izquierda.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/top/accion_torre_top_2_derecha.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/top/accion_torre_top_2_derecha.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torres/top/accion_torre_top_2_izquierda.py" beforeDir="false" afterPath="$PROJECT_DIR$/torres/top/accion_torre_top_2_izquierda.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial/tutorial.mp4" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial/tutorial.mp4" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/villanos/Caballero/accion_caballero.py" beforeDir="false" afterPath="$PROJECT_DIR$/villanos/Caballero/accion_caballero.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/villanos/Leia/accion_leia.py" beforeDir="false" afterPath="$PROJECT_DIR$/villanos/Leia/accion_leia.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/villanos/Minato/accion_minato.py" beforeDir="false" afterPath="$PROJECT_DIR$/villanos/Minato/accion_minato.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/villanos/Sanadora/accion_sanadora.py" beforeDir="false" afterPath="$PROJECT_DIR$/villanos/Sanadora/accion_sanadora.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/villanos/Sombrero/accion_sombrero.py" beforeDir="false" afterPath="$PROJECT_DIR$/villanos/Sombrero/accion_sombrero.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -63,18 +33,18 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Daniel\Desktop\TFG\personajes" />
+      <recent name="D:\Users\DAM 2\Desktop\TFG\sonidos" />
+      <recent name="C:\Users\Daniel\Desktop\tfg\personajes" />
+      <recent name="D:\Users\DAM 2\Desktop\tfg (minion gira) v-Sergio\tfg\personajes" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Users\DAM 2\Desktop\TFG\imagenes" />
       <recent name="D:\Users\DAM 2\Desktop\tfg (3)\tfg\codigo" />
       <recent name="D:\Users\DAM 2\Desktop\tfg (3)\tfg\imagenes" />
       <recent name="D:\Users\DAM 2\Desktop\tfg\tfg\personajes" />
       <recent name="D:\Users\DAM 2\Desktop\tfg\tfg\codigo" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Daniel\Desktop\TFG\personajes" />
-      <recent name="D:\Users\DAM 2\Desktop\TFG\sonidos" />
-      <recent name="C:\Users\Daniel\Desktop\tfg\personajes" />
-      <recent name="D:\Users\DAM 2\Desktop\tfg (minion gira) v-Sergio\tfg\personajes" />
     </key>
   </component>
   <component name="RunDashboard">
