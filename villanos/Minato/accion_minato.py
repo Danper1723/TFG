@@ -1,6 +1,4 @@
-import random
 import sqlite3
-
 import pygame
 import math
 
@@ -525,20 +523,6 @@ class Accion_minato:
                 if self.health > 0:
                     self.draw_health_bar(win)
 
-    def colision(self, X, Y):
-        """
-        DETECTA QUE EL SUBDITO RECIBA UNA COLISION
-        :param x: INT
-        :param y: INT
-        :return: BOOLEAN
-        """
-        #ESTE IF COMPROBARA MEDIANTE LAS POSICIONES EN EL EJE SI HAN GOLPEADO AL SUBDITO
-        if X <= self.x + self.width and X >= self.x:
-            if Y <= self.y + self.height and Y >=self.y:
-                return True
-        return False
-
-
     def mover(self):
         """
         MUEVE AL SUBDITO
@@ -578,7 +562,6 @@ class Accion_minato:
         if self.health <= 0:
             self.path_pos = 0
 
-
         x1,y1 = self.path[self.path_pos]
         print(self.path[self.path_pos], self.nombre)
 
@@ -599,8 +582,6 @@ class Accion_minato:
         if self.dis >= move_dis:
             self.dis = 0
             self.cont_mover = 0
-                #self.path_pos=0
-                #self.path_pos += 1
             if self.path_pos < len(self.path)-1:
                 self.path_pos += 1
             else:
@@ -609,18 +590,6 @@ class Accion_minato:
             self.x = mover_x
             self.y = mover_y
         return True
-
-    def hit(self):
-        """
-        DEVUELVE SI EL SUBDITO HA SIDO GOLPEADO Y LE RESTA VIDA
-        :return: BOOLEAN
-        """
-        dmg = random.choice(range(0, 3))
-        #dmg = 10
-        self.health -= dmg
-        if self.health <= 0:
-            self.path_pos = 0
-            self.health = 0
 
     def draw_health_bar(self, win):  # Barra de vida
         """
@@ -635,11 +604,6 @@ class Accion_minato:
 
         pygame.draw.rect(win, (255, 0, 0), (self.x - 0, self.y - 7, length, 5), 0)
         pygame.draw.rect(win, (158, 18, 228), (self.x - 0, self.y - 7, health_bar, 5), 0)
-
-    """
-    Si el estado esta en True quiere decir que el minion se va a dibujar
-    Si el estado esta en False quiere decir que el minion no se va a dibujar
-    """
 
     def estado_partida(self):
         if self.estado:
@@ -665,3 +629,5 @@ class Accion_minato:
             effect = pygame.mixer.Sound('../sonidos/sonidos_muertes/muerte_minato.wav')
             effect.set_volume(0.5)
             effect.play()
+
+

@@ -3,8 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="a8158525-63cb-49b9-bcc3-2dbd75664211" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/codigo/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/codigo/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datos.db" beforeDir="false" afterPath="$PROJECT_DIR$/datos.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imagenes/Guia.png" beforeDir="false" afterPath="$PROJECT_DIR$/imagenes/Guia.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/villanos/Minato/accion_minato.py" beforeDir="false" afterPath="$PROJECT_DIR$/villanos/Minato/accion_minato.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
