@@ -1,10 +1,8 @@
 # Pixel Tactics
-
-_Acá va un párrafo que describa lo que es el proyecto_
-
+El juego consiste en un mapa de tres líneas, en el cual el objetivo es destruir la base del equipo enemigo, para ello cada bando dispone de súbditos que se generan por igual para los dos equipos y campeones que el jugador tendrá que elegir su colocación. El juego transcurre por rondas que están compuestas por dos partes, una de 20 segundos en la que el jugador debe decidir la colocación de sus campeones y otra de 60 segundos en los cuales transcurre el combate automáticamente, en caso de acabar todos los combates se vuelve a pasar a al tiempo de colocación. El juego está basado en dos géneros  el MOBA y el Auto Battle explicados a continuación.
 ## Comenzando 🚀
 
-_Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
+Para poder jugar necesitaras el IDE * [Pycharm](https://www.jetbrains.com/es-es/pycharm/)
 
 Mira **Deployment** para conocer como desplegar el proyecto.
 
