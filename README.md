@@ -12,9 +12,9 @@ python --version
 
 ## Construido con 🛠️
 
-[Pycharm](https://www.jetbrains.com/es-es/pycharm/) - IDE
-[Python](https://www.python.org/downloads/) 3.7 en adelante. - Lenguaje
-[Pygame](https://www.pygame.org/news) 1.9.5 en adelante. - Libreria Principal
+*[Pycharm](https://www.jetbrains.com/es-es/pycharm/) - IDE
+*[Python](https://www.python.org/downloads/) 3.7 en adelante. - Lenguaje
+*[Pygame](https://www.pygame.org/news) 1.9.5 en adelante. - Libreria Principal
 
 ## Wiki 📖
 
