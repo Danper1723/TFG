@@ -5,10 +5,10 @@ El juego consiste en un mapa de tres líneas, en el cual el objetivo es destruir
 
 Para poder jugar necesitaras el IDE [Pycharm](https://www.jetbrains.com/es-es/pycharm/) y [Python](https://www.python.org/downloads/) 3.7 en adelante.
 
+Para comprobar la versión de Python de tu equipo abre CMD como administrador y ejecuta la siguiente sentencia.
 ```
-Da un ejemplo
+python --version
 ```
-
 
 ## Construido con 🛠️
 
@@ -16,28 +16,18 @@ Da un ejemplo
 [Python](https://www.python.org/downloads/) 3.7 en adelante. - Lenguaje
 [Pygame](https://www.pygame.org/news) 1.9.5 en adelante. - Libreria Principal
 
-
 ## Wiki 📖
 
 [Pagina Web](https://pixel-tactics.web.app/index.html)
 
-
 ## Autores ✒️
 
-_Menciona a todos aquellos que ayudaron a levantar el proyecto desde sus inicios_
-
-* **Andrés** - *Trabajo Inicial* - [villanuevand](https://github.com/villanuevand)
-* **Fulanito Detal** - *Documentación* - [fulanitodetal](#fulanito-de-tal)
-
-También puedes mirar la lista de todos los [contribuyentes](https://github.com/your/project/contributors) quíenes han participado en este proyecto. 
-
-## Licencia 📄
-
-Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md](LICENSE.md) para detalles
+* **Daniel Pérez Moreno** - [Danper1723](https://github.com/Danper1723)
+* **Pedro Gómez Urdiales** - [PedroGUR](https://github.com/PedroGUR)
+* **Sergio Dominguez Rivera** - [DominguezSergio](https://github.com/DominguezSergio)
 
 ## Expresiones de Gratitud 🎁
 
 * Comenta a otros sobre este proyecto 📢
-* Invita una cerveza 🍺 o un café ☕ a alguien del equipo. 
-* Da las gracias públicamente 🤓.
-* etc.
+* Compartelo
+* Disfruta jugandolo tanto como nosotros lo hemos hecho desarrollandolo 🤓.
